@@ -15,12 +15,12 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.spring;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.*;
+//import org.springframework.beans.BeansException;
+//import org.springframework.beans.factory.BeanInitializationException;
+//import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+//import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+//import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+//import org.springframework.core.env.*;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -30,21 +30,22 @@ import java.util.Properties;
  * Date: 20/05/2012
  * Time: 11:47
  */
-public class EnvironmentalPropertySourcesPlaceholderConfigurer extends PropertySourcesPlaceholderConfigurer
+public class EnvironmentalPropertySourcesPlaceholderConfigurer
+        //extends PropertySourcesPlaceholderConfigurer
 {
-    private final String ENVIRONMENT_SPECIFIC_PROPERTIES = "environmentSpecifyProperties";
-
-    public EnvironmentalPropertySourcesPlaceholderConfigurer(Properties p) {
-
-        StandardEnvironment env = new StandardEnvironment();
-        MutablePropertySources sources = new MutablePropertySources();
-
-        sources.addLast(new MapPropertySource(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, env.getSystemProperties()));
-        sources.addLast(new SystemEnvironmentPropertySource(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME,env.getSystemEnvironment()));
-
-        sources.addFirst(new PropertiesPropertySource(ENVIRONMENT_SPECIFIC_PROPERTIES,p));
-        super.setPropertySources(sources);
-    }
+//    private final String ENVIRONMENT_SPECIFIC_PROPERTIES = "environmentSpecifyProperties";
+//
+//    public EnvironmentalPropertySourcesPlaceholderConfigurer(Properties p) {
+//
+//        StandardEnvironment env = new StandardEnvironment();
+//        MutablePropertySources sources = new MutablePropertySources();
+//
+//        sources.addLast(new MapPropertySource(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, env.getSystemProperties()));
+//        sources.addLast(new SystemEnvironmentPropertySource(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME,env.getSystemEnvironment()));
+//
+//        sources.addFirst(new PropertiesPropertySource(ENVIRONMENT_SPECIFIC_PROPERTIES,p));
+//        super.setPropertySources(sources);
+//    }
 
     /**
      * {@linkplain #mergeProperties Merge}, {@linkplain #convertProperties convert} and
