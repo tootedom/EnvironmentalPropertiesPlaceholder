@@ -15,8 +15,11 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.builder;
 
+import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
+import org.greencheek.utils.environment.propertyplaceholder.merger.SystemAndEnvironmentSpecificPropertiesMerger;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.EnvironmentSpecificPropertiesResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesResolver;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 
@@ -28,13 +31,11 @@ import java.util.regex.Pattern;
  * Date: 20/05/2012
  * Time: 13:32
  */
-public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesResolverBuilder {
+public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMergerBuilder {
 
     private Pattern sensitiveProperyMasker = DEFAULT_SENSITIVE_PROPERTY_MASK;
     private boolean outputtingPropertiesInDebugMode = DEFAULT_OUTPUTTING_PROPERTIES_IN_DEBUG_MODE;
-    private boolean trimmingPropertyValues= DEFAULT_TRIMMING_PROPERTY_VALUES ;
-    private boolean resolvingSystemProperties = DEFAULT_SYSTEM_PROPERTIES_RESOLUTION_ENABLED;
-    private boolean resolvingEnvironmentVariables = DEFAULT_ENVIRONMENT_PROPERTIES_RESOLUTION_ENABLED;
+
     private boolean strictMergingOfProperties = DEFAULT_STRICT_MERGING_OF_PROPERTIES;
     private String nameOfDefaultPropertiesFile = DEFAULT_DEFAULT_PROPERTIES_FILENAME;
 
@@ -47,18 +48,18 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
 
     private String applicationName;
 
-    private OperatingEnvironmentVariableReader operatingEnvironmentVariableReader;
+    private OperatingEnvironmentVariableReader operatingEnvironmentVariableReader = DEFAULT_OPERATING_ENVIRONMENT_VARIABLE_READER;
 
     private ResourceLoader resourceLoaderForLoadingConfigurationProperties = DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES;
     private ResourceLoader operationalOverridesResourceLoader = DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES;
 
-    public EnvironmentSpecificPropertiesResolverBuilder(ResourceLoader locationOfConfiguration) {
+    public EnvironmentSpecificPropertiesMergerBuilder(ResourceLoader locationOfConfiguration) {
         this.resourceLoaderForLoadingConfigurationProperties = locationOfConfiguration;
     }
 
 
     @Override
-    public PropertiesResolverBuilder setOutputtingPropertiesInDebugMode(boolean outputtingPropertiesInDebugMode) {
+    public PropertiesMergerBuilder setOutputtingPropertiesInDebugMode(boolean outputtingPropertiesInDebugMode) {
         this.outputtingPropertiesInDebugMode = outputtingPropertiesInDebugMode;
         return this;
     }
@@ -69,7 +70,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setApplicationName(String applicationName) {
+    public PropertiesMergerBuilder setApplicationName(String applicationName) {
         this.applicationName = applicationName;
         return this;
 
@@ -81,7 +82,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setSensitivePropertyMasker(Pattern pattern) {
+    public PropertiesMergerBuilder setSensitivePropertyMasker(Pattern pattern) {
         sensitiveProperyMasker = pattern;
         return this;
     }
@@ -93,7 +94,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
 
 
     @Override
-    public PropertiesResolverBuilder setOperationalOverridesResourceLoader(ResourceLoader resourceLoader) {
+    public PropertiesMergerBuilder setOperationalOverridesResourceLoader(ResourceLoader resourceLoader) {
         this.operationalOverridesResourceLoader = resourceLoader;
         return this;
     }
@@ -104,7 +105,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setResourceLoaderForLoadingConfigurationProperties(ResourceLoader loader) {
+    public PropertiesMergerBuilder setResourceLoaderForLoadingConfigurationProperties(ResourceLoader loader) {
         this.resourceLoaderForLoadingConfigurationProperties = loader;
         return this;
     }
@@ -115,40 +116,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setTrimmingPropertyValues(boolean trimValues) {
-        this.trimmingPropertyValues = trimValues;
-        return this;
-    }
-
-    @Override
-    public boolean isTrimmingPropertyValues() {
-        return this.trimmingPropertyValues;
-    }
-
-    @Override
-    public PropertiesResolverBuilder setResolvingSystemProperties(boolean useSystemPropeties) {
-        this.resolvingSystemProperties = useSystemPropeties;
-        return this;
-    }
-
-    @Override
-    public boolean isResolvingSystemProperties() {
-        return this.resolvingSystemProperties;
-    }
-
-    @Override
-    public PropertiesResolverBuilder setResolvingEnvironmentVariables(boolean useEnvironmentVariables) {
-        this.resolvingEnvironmentVariables = useEnvironmentVariables;
-        return this;
-    }
-
-    @Override
-    public boolean isResolvingEnvrionmentVariables() {
-        return this.resolvingEnvironmentVariables;
-    }
-
-    @Override
-    public PropertiesResolverBuilder setExtensionForPropertiesFile(String extensionForPropertiesFile) {
+    public PropertiesMergerBuilder setExtensionForPropertiesFile(String extensionForPropertiesFile) {
         this.extensionForPropertiesFile = extensionForPropertiesFile;
         return this;
     }
@@ -159,7 +127,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setExtensionSeparatorCharForPropertiesFile(char separator) {
+    public PropertiesMergerBuilder setExtensionSeparatorCharForPropertiesFile(char separator) {
         this.extensionSeparatorCharForPropertiesFile = separator;
         return this;
     }
@@ -174,7 +142,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
             ]
     */
     @Override
-    public PropertiesResolverBuilder setVariablesUsedForSwitchingConfiguration(String[] environmentalSwitchingSourcesAsCSV) {
+    public PropertiesMergerBuilder setVariablesUsedForSwitchingConfiguration(String[] environmentalSwitchingSourcesAsCSV) {
         if(environmentalSwitchingSourcesAsCSV==null || environmentalSwitchingSourcesAsCSV.length==0) return this;
 
         this.variablesUsedForSwitchingPropertyFiles = new String[environmentalSwitchingSourcesAsCSV.length][];
@@ -186,7 +154,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setVariablesUsedForSwitchingConfiguration(List<List<String>> environmentalSwitchingSources) {
+    public PropertiesMergerBuilder setVariablesUsedForSwitchingConfiguration(List<List<String>> environmentalSwitchingSources) {
         if(environmentalSwitchingSources.size()==0) return this;
 
         this.variablesUsedForSwitchingPropertyFiles = new String[environmentalSwitchingSources.size()][];
@@ -215,7 +183,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
 
 
     @Override
-    public PropertiesResolverBuilder setDelimiterUsedForSeparatingSwitchingConfigurationVariables(char c) {
+    public PropertiesMergerBuilder setDelimiterUsedForSeparatingSwitchingConfigurationVariables(char c) {
         delimiterUsedForSeparatingSwitchingConfigurationVariables = c;
         return this;
     }
@@ -226,7 +194,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setOperatingEnvironmentVariableReader(OperatingEnvironmentVariableReader variableReader) {
+    public PropertiesMergerBuilder setOperatingEnvironmentVariableReader(OperatingEnvironmentVariableReader variableReader) {
         this.operatingEnvironmentVariableReader = variableReader;
         return this;
     }
@@ -236,16 +204,17 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
         return operatingEnvironmentVariableReader;
     }
 
+
     @Override
-    public PropertiesResolver build() {
-        return new EnvironmentSpecificPropertiesResolver(this);
+    public PropertiesMerger build() {
+        return new SystemAndEnvironmentSpecificPropertiesMerger(this);
     }
 
 
 
 
     @Override
-    public PropertiesResolverBuilder setNameOfDefaultPropertiesFile(String defaultName) {
+    public PropertiesMergerBuilder setNameOfDefaultPropertiesFile(String defaultName) {
         this.nameOfDefaultPropertiesFile = defaultName;
         return this;
     }
@@ -256,7 +225,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     }
 
     @Override
-    public PropertiesResolverBuilder setStrictMergingOfProperties(boolean strict) {
+    public PropertiesMergerBuilder setStrictMergingOfProperties(boolean strict) {
         this.strictMergingOfProperties = strict;
         return this;
     }
@@ -268,7 +237,7 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
 
 
     @Override
-    public PropertiesResolverBuilder setRelativeLocationOfFilesOverridingDefaultProperties(String relativeLocation) {
+    public PropertiesMergerBuilder setRelativeLocationOfFilesOverridingDefaultProperties(String relativeLocation) {
         if(!relativeLocation.endsWith("/")) relativeLocation = relativeLocation + "/";
 
         this.relativeLocationOfFilesOverridingDefaultProperties = relativeLocation;

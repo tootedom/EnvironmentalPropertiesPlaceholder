@@ -20,9 +20,9 @@
     </scm>
 
     <properties>
-        <!--
+
         <spring.version>3.1.1.RELEASE</spring.version>
-        -->
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <git.snapshots.repo.url>https://raw.github.com/tootedom/tootedom-mvn-repo/master/snapshots</git.snapshots.repo.url>
         <git.releases.repo.url>https://raw.github.com/tootedom/tootedom-mvn-repo/master/releases</git.releases.repo.url>
@@ -42,13 +42,13 @@
             <version>1.1</version>
             <scope>test</scope>
         </dependency>
-        <!--
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        -->
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

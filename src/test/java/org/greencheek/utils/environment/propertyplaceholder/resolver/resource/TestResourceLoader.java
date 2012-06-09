@@ -18,8 +18,6 @@ package org.greencheek.utils.environment.propertyplaceholder.resolver.resource;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.management.OperationsException;
-import java.beans.PropertyEditorSupport;
 import java.io.*;
 import java.util.Properties;
 

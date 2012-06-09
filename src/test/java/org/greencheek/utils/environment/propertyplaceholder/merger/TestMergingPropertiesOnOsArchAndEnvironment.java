@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.greencheek.utils.environment.propertyplaceholder.resolver;
+package org.greencheek.utils.environment.propertyplaceholder.merger;
 
-import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder;
-import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesResolverBuilder;
+import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder;
+import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesMergerBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
 import org.junit.Before;
@@ -38,9 +38,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestMergingPropertiesOnOsArchAndEnvironment
 {
-    private PropertiesResolverBuilder resolverEnvAndOsBuilder;
-    private PropertiesResolverBuilder resolverTargetPlatformBuilder;
-    private PropertiesResolverBuilder resolverTargetPlatformWithOpsOverridesBuilder;
+    private PropertiesMergerBuilder resolverEnvAndOsBuilder;
+    private PropertiesMergerBuilder resolverTargetPlatformBuilder;
+    private PropertiesMergerBuilder resolverTargetPlatformWithOpsOverridesBuilder;
 
 
     @Before
@@ -48,7 +48,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
         System.setProperty("ENV","dev");
         System.setProperty("TARGET_PLATFORM","production");
 
-        resolverEnvAndOsBuilder = new EnvironmentSpecificPropertiesResolverBuilder(new ClassPathResourceLoader("/"));
+        resolverEnvAndOsBuilder = new EnvironmentSpecificPropertiesMergerBuilder(new ClassPathResourceLoader("/"));
         resolverEnvAndOsBuilder.setVariablesUsedForSwitchingConfiguration(new String[] {"ENV","ENV,os.arch"});
         resolverEnvAndOsBuilder.setOperatingEnvironmentVariableReader(new OperatingEnvironmentVariableReader() {
             @Override
@@ -64,7 +64,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
         });
         resolverEnvAndOsBuilder.setRelativeLocationOfFilesOverridingDefaultProperties("");
 
-        resolverTargetPlatformBuilder = new EnvironmentSpecificPropertiesResolverBuilder(new ClassPathResourceLoader("/config"));
+        resolverTargetPlatformBuilder = new EnvironmentSpecificPropertiesMergerBuilder(new ClassPathResourceLoader("/config"));
         resolverTargetPlatformBuilder.setVariablesUsedForSwitchingConfiguration(new String[] {"TARGET_PLATFORM"});
         resolverTargetPlatformBuilder.setOperatingEnvironmentVariableReader(new OperatingEnvironmentVariableReader() {
             @Override
@@ -82,7 +82,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
         resolverTargetPlatformBuilder.setRelativeLocationOfFilesOverridingDefaultProperties("environments");
 
 
-        resolverTargetPlatformWithOpsOverridesBuilder = new EnvironmentSpecificPropertiesResolverBuilder(new ClassPathResourceLoader("/overrides_testing/config"));
+        resolverTargetPlatformWithOpsOverridesBuilder = new EnvironmentSpecificPropertiesMergerBuilder(new ClassPathResourceLoader("/overrides_testing/config"));
         resolverTargetPlatformWithOpsOverridesBuilder.setVariablesUsedForSwitchingConfiguration(new String[] {"TARGET_PLATFORM"});
         resolverTargetPlatformWithOpsOverridesBuilder.setNameOfDefaultPropertiesFile("environment");
         resolverTargetPlatformWithOpsOverridesBuilder.setOperationalOverridesResourceLoader(new ClassPathResourceLoader("/overrides_testing/config/platform_opsoverrides/config"));
@@ -105,7 +105,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
 
     @Test
     public void testPropertiesMergedOnServerEnvAndOsArch() {
-        PropertiesResolver resolverEnvAndOs = resolverEnvAndOsBuilder.build();
+        PropertiesMerger resolverEnvAndOs = resolverEnvAndOsBuilder.build();
 
         Properties p = resolverEnvAndOs.getMergedProperties();
         Map<String,String> actual = new HashMap(p);
@@ -120,7 +120,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
 
     @Test
     public void testPropertiesMergedOnTargetPlatform() {
-        PropertiesResolver resolverTargetPlatform  =  resolverTargetPlatformBuilder.build();
+        PropertiesMerger resolverTargetPlatform  =  resolverTargetPlatformBuilder.build();
         Properties p = resolverTargetPlatform.getMergedProperties();
         Map<String,String> actual = new HashMap(p);
         assertTrue(actual.size()==2);
@@ -133,7 +133,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
 
     @Test
     public void testPropertiesMergedOnTargetPlatformWithOperationsOverrides() {
-        PropertiesResolver resolverTargetPlatform  =  resolverTargetPlatformWithOpsOverridesBuilder.build();
+        PropertiesMerger resolverTargetPlatform  =  resolverTargetPlatformWithOpsOverridesBuilder.build();
         Properties p = resolverTargetPlatform.getMergedProperties();
         Map<String,String> actual = new HashMap(p);
         assertTrue(actual.size()==4);

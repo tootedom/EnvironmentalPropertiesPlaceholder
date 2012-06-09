@@ -27,19 +27,25 @@ public interface PropertiesResolver {
 
     boolean isTrimmingPropertyValues();
 
-    boolean isResolvingSystemProperties();
-
-    boolean isResolvingEnvironmentVariables();
+    /**
+     * Returns a property from the map. If a property does not exist null will be returned.
+     * The returned property value will have had its value resolved of any placeholders (variables i.e. ${xxx}).
+     * They will only remain if they failed to resolve.
+     *
+     * @param propertyName the name of the property to return
+     * @return the property value, or null.
+     */
+    String getProperty(String propertyName);
 
     /**
-     * Returns a property from the map.
-     * If a property does not exist null is will be returned
+     * Returns a property from the map. If a property does not exist null will be returned.
+     * The returned property value will <b>NOT</b> have had its value resolved of any placeholders
+     * (variables i.e. ${xxx}).
      *
-     * @param simplePropertyName the name of the property to return
-     * @return
+     * @param propertyName the name of the property to return
+     * @return the property value, or null.
      */
-    String getProperty(String simplePropertyName);
+    String getUnResolvedProperty(String propertyName);
 
-    Properties getMergedProperties();
-    Map<String,String> getMergedPropertiesAsMap();
+
 }

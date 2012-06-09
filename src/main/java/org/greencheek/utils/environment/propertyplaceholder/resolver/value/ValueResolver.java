@@ -15,6 +15,9 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.value;
 
+import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.JavaPlatformOperatingEnvironmentProperties;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
+
 import java.util.Map;
 import java.util.Properties;
 
@@ -24,9 +27,14 @@ import java.util.Properties;
  * Time: 17:38
  */
 public interface ValueResolver {
-    static String DEFAULT_PLACEHOLDER_PREFIX = "${";
-    static String DEFAULT_PLACEHOLDER_SUFFIX = "}";
-    static String DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR = ":";
+    final static boolean DEFAULT_SYSTEM_PROPERTIES_RESOLUTION_ENABLED = true;
+    final static boolean DEFAULT_ENVIRONMENT_PROPERTIES_RESOLUTION_ENABLED = true;
+    final static OperatingEnvironmentProperties DEFAULT_OPERATING_ENVIRONMENT_PROPERTIES = new JavaPlatformOperatingEnvironmentProperties();
+    final static boolean DEFAULT_IGNORE_UNRESOLVABLE_PLACEHOLDERS = true;
+    final static String DEFAULT_PLACEHOLDER_PREFIX = "${";
+    final static String DEFAULT_PLACEHOLDER_SUFFIX = "}";
+    final static String DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR = ":";
+    final static boolean DEFAULT_TRIM_VALUES = false;
 
     /**
      * Replaces all placeholders of format <code>${name}</code> with the corresponding property
@@ -37,7 +45,9 @@ public interface ValueResolver {
      *                   we loop around and resolve.
      * @return the supplied value with placeholders replaced inline.
      */
+    Properties resolvedPropertyValues(Properties properties,boolean trimValues);
     Properties resolvedPropertyValues(Properties properties);
+
 
     /**
      * Replaces all placeholders of format <code>${name}</code> with the corresponding property
@@ -48,8 +58,8 @@ public interface ValueResolver {
      *                   and also the properties for which we loop around and resolve.
      * @return the supplied value with placeholders replaced inline.
      */
+    Map<String,String> resolvedPropertyValues(Map<String,String> properties,boolean trimValues);
     Map<String,String> resolvedPropertyValues(Map<String,String> properties);
-
     /**
      * Replaces all placeholders of format <code>${name}</code> with the value returned from the supplied
      * {@link Properties} object.
@@ -58,6 +68,7 @@ public interface ValueResolver {
      * @param properties the <code>Properties</code> to use as the source of the placeholders replacements
      * @return the supplied value with placeholders replaced inline.
      */
+    String resolvedPropertyValue(Properties properties, String key,boolean trimValues);
     String resolvedPropertyValue(Properties properties, String key);
 
     /**
@@ -69,5 +80,6 @@ public interface ValueResolver {
      * @param map the <code>Map</code> to use as the source of the placeholders replacements
      * @return the supplied value with placeholders replaced inline.
      */
+    String resolvedPropertyValue(Map<String,String> map, String key,boolean trimValues);
     String resolvedPropertyValue(Map<String,String> map, String key);
 }
