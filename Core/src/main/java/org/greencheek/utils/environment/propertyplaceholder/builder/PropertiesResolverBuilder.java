@@ -20,6 +20,8 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesR
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver;
 
+import java.util.Properties;
+
 /**
  * @{link #build} must be called on the same thread as the other setters.
  * This is so that the @{link PropertiesResolver} is created with all the values that have been set on the builder
@@ -36,6 +38,7 @@ public interface PropertiesResolverBuilder {
 
 
     public PropertiesResolver build(PropertiesMerger mergedPropertiesLoader);
+    public Properties buildProperties(PropertiesMerger mergedPropertiesLoader);
 
     public PropertiesResolverBuilder setPropertyValueResolver(ValueResolver resolver);
     public ValueResolver getValueResolver();

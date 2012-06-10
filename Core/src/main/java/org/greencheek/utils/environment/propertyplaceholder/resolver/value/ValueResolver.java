@@ -27,14 +27,6 @@ import java.util.Properties;
  * Time: 17:38
  */
 public interface ValueResolver {
-    final static boolean DEFAULT_SYSTEM_PROPERTIES_RESOLUTION_ENABLED = true;
-    final static boolean DEFAULT_ENVIRONMENT_PROPERTIES_RESOLUTION_ENABLED = true;
-    final static OperatingEnvironmentProperties DEFAULT_OPERATING_ENVIRONMENT_PROPERTIES = new JavaPlatformOperatingEnvironmentProperties();
-    final static boolean DEFAULT_IGNORE_UNRESOLVABLE_PLACEHOLDERS = true;
-    final static String DEFAULT_PLACEHOLDER_PREFIX = "${";
-    final static String DEFAULT_PLACEHOLDER_SUFFIX = "}";
-    final static String DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR = ":";
-    final static boolean DEFAULT_TRIM_VALUES = true;
 
     /**
      * Replaces all placeholders of format <code>${name}</code> with the corresponding property

@@ -46,7 +46,7 @@ public class TestValueResolver {
     @Before
     public void setUp() {
         resolver = new VariablePlaceholderValueResolver();
-        VariablePlaceholderValueResolverConfig config = new VariablePlaceholderValueResolverConfig();
+        ValueResolverConfig config = new VariablePlaceholderValueResolverConfig();
         config.setEnvironmentPropertiesResolutionEnabled(false)
               .setSystemPropertiesResolutionEnabled(true)
               .setOperatingEnvironmentProperties(new OperatingEnvironmentProperties() {

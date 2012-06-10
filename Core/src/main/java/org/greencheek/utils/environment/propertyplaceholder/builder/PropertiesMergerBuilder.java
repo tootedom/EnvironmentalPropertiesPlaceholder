@@ -27,6 +27,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.value.Value
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
@@ -157,4 +158,5 @@ public interface PropertiesMergerBuilder {
 
 
     public PropertiesMerger build();
+    public Properties buildProperties();
 }

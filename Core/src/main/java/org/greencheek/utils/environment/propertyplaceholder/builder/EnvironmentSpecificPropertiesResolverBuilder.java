@@ -20,6 +20,8 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.Environment
 import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
 
+import java.util.Properties;
+
 /**
  * User: dominictootell
  * Date: 09/06/2012
@@ -57,8 +59,12 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
     public PropertiesResolver build(PropertiesMerger mergedPropertiesLoader) {
         ValueResolver resolver = getValueResolver();
         if(resolver==null) resolver = DEFAULT_PROPERTY_VALUE_RESOLVER;
-
         return new EnvironmentSpecificPropertiesResolver(this,mergedPropertiesLoader,resolver);
+    }
+
+    @Override
+    public Properties buildProperties(PropertiesMerger mergedPropertiesLoader) {
+        return build(mergedPropertiesLoader).getProperties();
     }
 
 }

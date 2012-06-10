@@ -15,7 +15,13 @@
             <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources">
                 <constructor-arg>
                     <list>
-                        <ref bean="environmentalProperties"/>
+                        <bean class="org.springframework.core.env.PropertiesPropertySource">
+                            <constructor-arg value="myEnvironmentProperties"/>
+                            <constructor-arg>
+                                <bean factory-bean="propertiesResolver" factory-method="buildResolvedProperties"/>
+                            </constructor-arg>
+                        </bean>
+
                         <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources" factory-method="getSystemProperties"/>
                         <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources" factory-method="getSystemEnvironmentProperties"/>
                     </list>
@@ -24,27 +30,20 @@
         </property>
     </bean>
 
-    <bean id="environmentalProperties" class="org.springframework.core.env.PropertiesPropertySource">
-        <constructor-arg value="environmentProperties"/>
+    <bean id="propertiesResolver" class="org.greencheek.utils.environment.propertyplaceholder.resolver.builder.CompositeResolvedPropertiesBuilder">
         <constructor-arg>
-             <bean factory-bean="environmentalPropertiesFinder" factory-method="buildProperties"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="environmentalPropertiesFinder" class="org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder">
-        <constructor-arg>
-            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader">
-                <constructor-arg value="/"/>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver">
+                <constructor-arg value="false"/>
+                <constructor-arg value="false"/>
             </bean>
         </constructor-arg>
+         <property name="resourceLoaderForLoadingConfigurationProperties">
+             <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader">
+                 <constructor-arg value=""/>
+             </bean>
+         </property>
     </bean>
 
-    <bean id="propertiesValueResolver" class="org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder">
-        <property name="trimmingPropertyValues" value="true"/>
-        <property name="propertyValueResolver">
-            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver"/>
-        </property>
-    </bean>
 
     <bean name="string" class="java.lang.String">
         <constructor-arg value="${message}"/>

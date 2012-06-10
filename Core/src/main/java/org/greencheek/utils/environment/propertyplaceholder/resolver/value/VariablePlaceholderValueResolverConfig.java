@@ -15,7 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.value;
 
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.JavaPlatformOperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 
 /**
@@ -27,87 +26,102 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.environment
  * Date: 09/06/2012
  * Time: 16:28
  */
-public class VariablePlaceholderValueResolverConfig
-{
-    private boolean systemPropertiesResolutionEnabled = ValueResolver.DEFAULT_SYSTEM_PROPERTIES_RESOLUTION_ENABLED;
-    private boolean environmentPropertiesResolutionEnabled = ValueResolver.DEFAULT_ENVIRONMENT_PROPERTIES_RESOLUTION_ENABLED;
-    private OperatingEnvironmentProperties operatingEnvironmentProperties = ValueResolver.DEFAULT_OPERATING_ENVIRONMENT_PROPERTIES;
-    private boolean ignoreUnresolvablePlaceholders = ValueResolver.DEFAULT_IGNORE_UNRESOLVABLE_PLACEHOLDERS;
-    private String placeholderPrefix = ValueResolver.DEFAULT_PLACEHOLDER_PREFIX;
-    private String placeholderSuffix = ValueResolver.DEFAULT_PLACEHOLDER_SUFFIX;
-    private String placeholderDefaultValueSeparator = ValueResolver.DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR;
-    private boolean trimValues = ValueResolver.DEFAULT_TRIM_VALUES;
+public class VariablePlaceholderValueResolverConfig implements ValueResolverConfig {
+    private boolean systemPropertiesResolutionEnabled = ValueResolverConfig.DEFAULT_SYSTEM_PROPERTIES_RESOLUTION_ENABLED;
+    private boolean environmentPropertiesResolutionEnabled = ValueResolverConfig.DEFAULT_ENVIRONMENT_PROPERTIES_RESOLUTION_ENABLED;
+    private OperatingEnvironmentProperties operatingEnvironmentProperties = ValueResolverConfig.DEFAULT_OPERATING_ENVIRONMENT_PROPERTIES;
+    private boolean ignoreUnresolvablePlaceholders = ValueResolverConfig.DEFAULT_IGNORE_UNRESOLVABLE_PLACEHOLDERS;
+    private String placeholderPrefix = ValueResolverConfig.DEFAULT_PLACEHOLDER_PREFIX;
+    private String placeholderSuffix = ValueResolverConfig.DEFAULT_PLACEHOLDER_SUFFIX;
+    private String placeholderDefaultValueSeparator = ValueResolverConfig.DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR;
+    private boolean trimmingPropertyValues = ValueResolverConfig.DEFAULT_TRIMMING_PROPERTY_VALUES;
 
 
+    @Override
     public boolean isSystemPropertiesResolutionEnabled() {
         return systemPropertiesResolutionEnabled;
     }
 
-    public VariablePlaceholderValueResolverConfig setSystemPropertiesResolutionEnabled(boolean defaultSystemPropertiesResolutionEnabled) {
+    @Override
+    public ValueResolverConfig setSystemPropertiesResolutionEnabled(boolean defaultSystemPropertiesResolutionEnabled) {
         this.systemPropertiesResolutionEnabled = defaultSystemPropertiesResolutionEnabled;
         return this;
     }
 
+    @Override
     public boolean isEnvironmentPropertiesResolutionEnabled() {
         return environmentPropertiesResolutionEnabled;
     }
 
-    public VariablePlaceholderValueResolverConfig setEnvironmentPropertiesResolutionEnabled(boolean defaultEnvironmentPropertiesResolutionEnabled) {
+    @Override
+    public ValueResolverConfig setEnvironmentPropertiesResolutionEnabled(boolean defaultEnvironmentPropertiesResolutionEnabled) {
         this.environmentPropertiesResolutionEnabled = defaultEnvironmentPropertiesResolutionEnabled;
         return this;
     }
 
+    @Override
     public OperatingEnvironmentProperties getOperatingEnvironmentProperties() {
         return operatingEnvironmentProperties;
     }
 
-    public VariablePlaceholderValueResolverConfig setOperatingEnvironmentProperties(OperatingEnvironmentProperties defaultOperatingEnvironmentProperties) {
+    @Override
+    public ValueResolverConfig setOperatingEnvironmentProperties(OperatingEnvironmentProperties defaultOperatingEnvironmentProperties) {
         this.operatingEnvironmentProperties = defaultOperatingEnvironmentProperties;
         return this;
     }
 
+    @Override
     public boolean isIgnoreUnresolvablePlaceholders() {
         return ignoreUnresolvablePlaceholders;
     }
 
-    public VariablePlaceholderValueResolverConfig setIgnoreUnresolvablePlaceholders(boolean ignoreUnresolvablePlaceholders) {
+    @Override
+    public ValueResolverConfig setIgnoreUnresolvablePlaceholders(boolean ignoreUnresolvablePlaceholders) {
         this.ignoreUnresolvablePlaceholders = ignoreUnresolvablePlaceholders;
         return this;
     }
 
+    @Override
     public String getPlaceholderPrefix() {
         return placeholderPrefix;
     }
 
-    public VariablePlaceholderValueResolverConfig setPlaceholderPrefix(String placeholderPrefix) {
+    @Override
+    public ValueResolverConfig setPlaceholderPrefix(String placeholderPrefix) {
         this.placeholderPrefix = placeholderPrefix;
         return this;
     }
 
+    @Override
     public String getPlaceholderSuffix() {
         return placeholderSuffix;
     }
 
-    public VariablePlaceholderValueResolverConfig setPlaceholderSuffix(String placeholderSuffix) {
+    @Override
+    public ValueResolverConfig setPlaceholderSuffix(String placeholderSuffix) {
         this.placeholderSuffix = placeholderSuffix;
         return this;
     }
 
+    @Override
     public String getPlaceholderDefaultValueSeparator() {
         return placeholderDefaultValueSeparator;
     }
 
-    public VariablePlaceholderValueResolverConfig setPlaceholderDefaultValueSeparator(String placeholderDefaultValueSeparator) {
+    @Override
+    public ValueResolverConfig setPlaceholderDefaultValueSeparator(String placeholderDefaultValueSeparator) {
         this.placeholderDefaultValueSeparator = placeholderDefaultValueSeparator;
         return this;
     }
 
-    public boolean isTrimValues() {
-        return trimValues;
+    @Override
+    public boolean isTrimmingPropertyValues() {
+        return trimmingPropertyValues;
     }
 
-    public VariablePlaceholderValueResolverConfig setTrimValues(boolean trimValues) {
-        this.trimValues = trimValues;
+    @Override
+    public ValueResolverConfig setTrimmingPropertyValues(boolean trimValues) {
+        this.trimmingPropertyValues = trimValues;
         return this;
     }
 }

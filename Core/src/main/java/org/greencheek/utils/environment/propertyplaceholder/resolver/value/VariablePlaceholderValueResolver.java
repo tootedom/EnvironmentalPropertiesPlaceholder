@@ -24,7 +24,6 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.environment
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.*;
 
 /**
@@ -74,9 +73,14 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
     private final OperatingEnvironmentProperties operatingEnvironmentProperties;
     private final Properties systemProperties;
     private final Properties environmentProperties;
-    private final boolean trimValues =true;
+    private final boolean trimmingPropertyValues;
 
 
+    public VariablePlaceholderValueResolver(boolean resolvingEnvironmentVariables,boolean resolvingSystemProperties) {
+        this(new VariablePlaceholderValueResolverConfig()
+                .setEnvironmentPropertiesResolutionEnabled(resolvingEnvironmentVariables)
+                .setSystemPropertiesResolutionEnabled(resolvingSystemProperties));
+    }
 
     public VariablePlaceholderValueResolver() {
         this(new VariablePlaceholderValueResolverConfig());
@@ -84,7 +88,7 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
 
 
 
-    public VariablePlaceholderValueResolver(VariablePlaceholderValueResolverConfig config) {
+    public VariablePlaceholderValueResolver(ValueResolverConfig config) {
         String placeholderPrefix = config.getPlaceholderPrefix();
         String placeholderSuffix = config.getPlaceholderSuffix();
         assertNotNull(placeholderPrefix, "placeholderPrefix must not be null");
@@ -109,58 +113,10 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
         }
         this.valueSeparator = config.getPlaceholderDefaultValueSeparator();
         this.ignoreUnresolvablePlaceholders = config.isIgnoreUnresolvablePlaceholders();
+
+        this.trimmingPropertyValues = config.isTrimmingPropertyValues();
     }
 
-    /**
-     * Creates a new <code>PropertyPlaceholderHelper</code> that uses the supplied prefix and suffix.
-     * Unresolvable placeholders are ignored.
-     * @param placeholderPrefix the prefix that denotes the start of a placeholder.
-     * @param placeholderSuffix the suffix that denotes the end of a placeholder.
-     */
-    public VariablePlaceholderValueResolver(String placeholderPrefix, String placeholderSuffix) {
-        this(placeholderPrefix, placeholderSuffix, DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR,
-             DEFAULT_IGNORE_UNRESOLVABLE_PLACEHOLDERS,
-             DEFAULT_SYSTEM_PROPERTIES_RESOLUTION_ENABLED,DEFAULT_ENVIRONMENT_PROPERTIES_RESOLUTION_ENABLED,
-             DEFAULT_OPERATING_ENVIRONMENT_PROPERTIES);
-    }
-
-    /**
-     * Creates a new <code>PropertyPlaceholderHelper</code> that uses the supplied prefix and suffix.
-     * @param placeholderPrefix the prefix that denotes the start of a placeholder
-     * @param placeholderSuffix the suffix that denotes the end of a placeholder
-     * @param valueSeparator the separating character between the placeholder variable
-     * and the associated default value, if any
-     * @param ignoreUnresolvablePlaceholders indicates whether unresolvable placeholders should be ignored
-     * (<code>true</code>) or cause an exception (<code>false</code>).
-     */
-    public VariablePlaceholderValueResolver(String placeholderPrefix, String placeholderSuffix,
-                                     String valueSeparator, boolean ignoreUnresolvablePlaceholders,
-                                     boolean resolvingSystemProperties,boolean resolvingEnvironmentVariables,
-                                     OperatingEnvironmentProperties operatingEnvironmentProperties) {
-
-        assertNotNull(placeholderPrefix, "placeholderPrefix must not be null");
-        assertNotNull(placeholderSuffix, "placeholderSuffix must not be null");
-
-        this.resolvingSystemProperties = resolvingSystemProperties;
-        this.resolvingEnvironmentVariables = resolvingEnvironmentVariables;
-        this.operatingEnvironmentProperties = operatingEnvironmentProperties;
-
-        environmentProperties = resolvingEnvironmentVariables ? operatingEnvironmentProperties.getEnvironmentProperties() : new Properties();
-        systemProperties = resolvingSystemProperties ? operatingEnvironmentProperties.getSystemProperties() : new Properties();
-
-
-        this.placeholderPrefix = placeholderPrefix;
-        this.placeholderSuffix = placeholderSuffix;
-        String simplePrefixForSuffix = wellKnownSimplePrefixes.get(this.placeholderSuffix);
-        if (simplePrefixForSuffix != null && this.placeholderPrefix.endsWith(simplePrefixForSuffix)) {
-            this.simplePrefix = simplePrefixForSuffix;
-        }
-        else {
-            this.simplePrefix = this.placeholderPrefix;
-        }
-        this.valueSeparator = valueSeparator;
-        this.ignoreUnresolvablePlaceholders = ignoreUnresolvablePlaceholders;
-    }
 
 
 
@@ -176,7 +132,7 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
      */
     @Override
     public Properties resolvedPropertyValues(Properties properties) {
-        return resolvedPropertyValues(properties,this.trimValues);
+        return resolvedPropertyValues(properties,this.trimmingPropertyValues);
     }
 
     public Properties resolvedPropertyValues(Properties properties,boolean trimValues)
@@ -201,7 +157,7 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
      */
     @Override
     public Map<String, String> resolvedPropertyValues(Map<String, String> properties) {
-        return resolvedPropertyValues(properties,this.trimValues);
+        return resolvedPropertyValues(properties,this.trimmingPropertyValues);
     }
 
     public Map<String, String> resolvedPropertyValues(Map<String, String> properties, boolean trimValues)
@@ -224,7 +180,7 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
      */
     @Override
     public String resolvedPropertyValue(Properties properties, String key) {
-        return resolvedPropertyValue(properties,key,this.trimValues);
+        return resolvedPropertyValue(properties,key,this.trimmingPropertyValues);
     }
     public String resolvedPropertyValue(Properties properties, String key, boolean trimValues) {
         if(properties.get(key)==null) return null;
@@ -244,7 +200,7 @@ public class VariablePlaceholderValueResolver implements ValueResolver {
      */
     @Override
     public String resolvedPropertyValue(Map<String, String> map, String key) {
-        return resolvedPropertyValue(map,key,this.trimValues);
+        return resolvedPropertyValue(map,key,this.trimmingPropertyValues);
     }
 
     public String resolvedPropertyValue(Map<String, String> map, String key,boolean trimValues){

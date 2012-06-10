@@ -25,6 +25,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.Cl
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
@@ -219,6 +220,10 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
         return new SystemAndEnvironmentSpecificPropertiesMerger(this);
     }
 
+    @Override
+    public Properties buildProperties() {
+        return build().getMergedProperties();
+    }
 
 
 
