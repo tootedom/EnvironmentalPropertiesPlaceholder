@@ -50,11 +50,16 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
 
     private OperatingEnvironmentVariableReader operatingEnvironmentVariableReader = DEFAULT_OPERATING_ENVIRONMENT_VARIABLE_READER;
 
-    private ResourceLoader resourceLoaderForLoadingConfigurationProperties = DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES;
+    private ResourceLoader resourceLoaderForLoadingConfigurationProperties;
     private ResourceLoader operationalOverridesResourceLoader = DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES;
+
+    public EnvironmentSpecificPropertiesMergerBuilder() {
+        this(DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES);
+    }
 
     public EnvironmentSpecificPropertiesMergerBuilder(ResourceLoader locationOfConfiguration) {
         this.resourceLoaderForLoadingConfigurationProperties = locationOfConfiguration;
+        this.setVariablesUsedForSwitchingConfiguration(DEFAULT_VARIABLES_USED_FOR_SWITCHING_CONFIGURATION);
     }
 
 
@@ -173,9 +178,7 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
         for (int i = 0; i < variablesUsedForSwitchingPropertyFiles.length; i++) {
             copy[i] = new String[variablesUsedForSwitchingPropertyFiles[i].length];
 
-            for (int j = 0; j < variablesUsedForSwitchingPropertyFiles[i].length; j++) {
-                copy[i][j] = variablesUsedForSwitchingPropertyFiles[i][j];
-            }
+            System.arraycopy(variablesUsedForSwitchingPropertyFiles[i], 0, copy[i], 0, variablesUsedForSwitchingPropertyFiles[i].length);
         }
         return copy;
     }

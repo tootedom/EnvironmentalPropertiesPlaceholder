@@ -34,7 +34,7 @@ public interface ValueResolver {
     final static String DEFAULT_PLACEHOLDER_PREFIX = "${";
     final static String DEFAULT_PLACEHOLDER_SUFFIX = "}";
     final static String DEFAULT_PLACEHOLDER_DEFAULT_VALUE_SEPARATOR = ":";
-    final static boolean DEFAULT_TRIM_VALUES = false;
+    final static boolean DEFAULT_TRIM_VALUES = true;
 
     /**
      * Replaces all placeholders of format <code>${name}</code> with the corresponding property

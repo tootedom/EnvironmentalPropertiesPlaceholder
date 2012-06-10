@@ -40,13 +40,14 @@ public interface PropertiesMergerBuilder {
     final static boolean DEFAULT_OUTPUTTING_PROPERTIES_IN_DEBUG_MODE = true;
 
     final static char DEFAULT_DELIMITER_USER_FOR_SEPARATING_SWITCHING_CONFIGURATION_VARIABLES = '.';
+    final static String[] DEFAULT_VARIABLES_USED_FOR_SWITCHING_CONFIGURATION = new String[]{"ENV"};
 
     final static char DEFAULT_EXTENSION_SEPARATOR_CHAR_FOR_PROPERTIES_FILE = '.';
     final static String DEFAULT_EXTENSION_FOR_PROPERTIES_FILE = "properties";
 
     final static String DEFAULT_DEFAULT_PROPERTIES_FILENAME = "default";
     final static boolean DEFAULT_STRICT_MERGING_OF_PROPERTIES = true;
-    final static String DEFAULT_RELATIVE_LOCATION_OF_FILES_OVERRIDE_DEFAULT = "environments";
+    final static String DEFAULT_RELATIVE_LOCATION_OF_FILES_OVERRIDE_DEFAULT = "environments/";
     final static String DEFAULT_OPERATIONAL_OVERRIDE_LOCATION = "/data/opsoverrides/";
     final static String DEFAULT_CONFIGURATION_LOCATION = "/config";
     final static ResourceLoader DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES = new ClassPathResourceLoader(DEFAULT_CONFIGURATION_LOCATION);

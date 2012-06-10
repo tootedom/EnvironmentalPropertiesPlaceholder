@@ -123,7 +123,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
         PropertiesMerger resolverTargetPlatform  =  resolverTargetPlatformBuilder.build();
         Properties p = resolverTargetPlatform.getMergedProperties();
         Map<String,String> actual = new HashMap(p);
-        assertTrue(actual.size()==2);
+        assertTrue(actual.size()==4);
 
         assertThat(actual, allOf(
                 hasEntry("default", "default"),

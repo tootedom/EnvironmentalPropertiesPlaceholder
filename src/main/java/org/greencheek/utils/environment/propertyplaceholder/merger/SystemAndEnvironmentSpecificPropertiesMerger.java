@@ -80,6 +80,9 @@ public class SystemAndEnvironmentSpecificPropertiesMerger implements PropertiesM
         if(opsOverride == PropertiesMergerBuilder.DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES) {
             if(applicationName!=null && applicationName.trim().length()>0) {
                 opsOverride = new FileSystemResourceLoader(PropertiesMergerBuilder.DEFAULT_OPERATIONAL_OVERRIDE_LOCATION + applicationName + PropertiesMergerBuilder.DEFAULT_CONFIGURATION_LOCATION);
+            } else {
+                // Make it null and do not read anything for the overrides
+                opsOverride = null;
             }
         }
 
@@ -285,26 +288,15 @@ public class SystemAndEnvironmentSpecificPropertiesMerger implements PropertiesM
 
         merged = load(defaultProperties);
 
-//        OperatingEnvironmentProperties properties = getOperatingEnvironmentProperties();
-//
-//        if(isResolvingEnvironmentVariables()) {
-//            merged.putAll(properties.getEnvironmentProperties());
-//        }
-//
-//        if(isResolvingSystemProperties()) {
-//            merged.putAll(properties.getSystemProperties());
-//        }
-//
-//
-
         for(File file : loadFiles(getPossibleOverrideFiles(),defaultAppPropertiesLoader)) {
             merged = mergeProperties(merged,load(file),strictMergingOfProperties);
 
         }
 
         // read overrides
-
-        merged = mergePropertiesAgainstOverrides(merged,getOperationalOverridesResourceLoader());
+        ResourceLoader overridesResourceLoader = getOperationalOverridesResourceLoader();
+        if(overridesResourceLoader!=null)
+            merged = mergePropertiesAgainstOverrides(merged,overridesResourceLoader);
 
         return merged;
     }

@@ -1,0 +1,3 @@
+password=dom
+secret=xxx
+bob=xxx
