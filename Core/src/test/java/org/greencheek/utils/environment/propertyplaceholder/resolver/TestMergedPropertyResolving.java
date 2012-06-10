@@ -16,11 +16,10 @@
 package org.greencheek.utils.environment.propertyplaceholder.resolver;
 
 import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder;
+import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesMergerBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesResolverBuilder;
-import org.greencheek.utils.environment.propertyplaceholder.builder.SystemAndEnvironmentSpecificPropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
@@ -91,7 +90,7 @@ public class TestMergedPropertyResolving {
                         setSystemPropertiesResolutionEnabled(true)
                         );
 
-        PropertiesResolverBuilder resolverConfig = new SystemAndEnvironmentSpecificPropertiesResolverBuilder();
+        PropertiesResolverBuilder resolverConfig = new EnvironmentSpecificPropertiesResolverBuilder();
         resolver = resolverConfig.setTrimmingPropertyValues(true)
                 .setPropertyValueResolver(valueResolver).build(mergedProperties);
     }

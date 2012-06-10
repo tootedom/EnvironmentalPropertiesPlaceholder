@@ -16,19 +16,8 @@
 package org.greencheek.utils.environment.propertyplaceholder.resolver;
 
 import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder;
-import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesMergerBuilder;
-import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesResolverBuilder;
-import org.greencheek.utils.environment.propertyplaceholder.builder.SystemAndEnvironmentSpecificPropertiesResolverBuilder;
+import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolverConfig;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
@@ -82,9 +71,9 @@ public class TestDefaultsForMergedPropertyResolving {
                                       setApplicationName("appname").build();
 
 
-        appNameResolver = new SystemAndEnvironmentSpecificPropertiesResolverBuilder().build(merger);
+        appNameResolver = new EnvironmentSpecificPropertiesResolverBuilder().build(merger);
 
-        nullAppNameResolver = new SystemAndEnvironmentSpecificPropertiesResolverBuilder().build(
+        nullAppNameResolver = new EnvironmentSpecificPropertiesResolverBuilder().build(
                 new EnvironmentSpecificPropertiesMergerBuilder().build()
         );
     }

@@ -15,11 +15,8 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver;
 
-import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesResolverBuilder;
-import org.greencheek.utils.environment.propertyplaceholder.builder.SystemAndEnvironmentSpecificPropertiesResolverBuilder;
+import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.merger.SystemAndEnvironmentSpecificPropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver;
 
 import java.util.HashMap;
@@ -42,7 +39,7 @@ public class TestEnvironmentSpecificPropertiesResolverDirectlyCreated extends Ab
         final Properties p = getProperties();
 
         PropertiesResolver resolver =
-                new SystemAndEnvironmentSpecificPropertiesResolverBuilder()
+                new EnvironmentSpecificPropertiesResolverBuilder()
                 .setTrimmingPropertyValues(trimValues)
                 .setPropertyValueResolver(new VariablePlaceholderValueResolver())
                 .build(new PropertiesMerger() {

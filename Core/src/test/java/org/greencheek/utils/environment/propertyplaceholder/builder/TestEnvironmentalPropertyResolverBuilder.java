@@ -15,8 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.builder;
 
-import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
-
 /**
  * User: dominictootell
  * Date: 09/06/2012
@@ -25,7 +23,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.Cl
 public class TestEnvironmentalPropertyResolverBuilder extends AbstractTestPropertiesResolverBuilder {
     @Override
     public PropertiesResolverBuilder createBuilder() {
-        return new SystemAndEnvironmentSpecificPropertiesResolverBuilder();
+        return new EnvironmentSpecificPropertiesResolverBuilder();
 
     }
 }

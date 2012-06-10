@@ -25,7 +25,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.value.Value
  * Date: 09/06/2012
  * Time: 13:12
  */
-public class SystemAndEnvironmentSpecificPropertiesResolverBuilder implements PropertiesResolverBuilder {
+public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesResolverBuilder {
 
     private boolean trimmingPropertyValues = DEFAULT_TRIMMING_PROPERTY_VALUES ;
     private ValueResolver propertyValueResolver = DEFAULT_PROPERTY_VALUE_RESOLVER;

@@ -38,6 +38,12 @@ public interface PropertiesResolver {
     String getProperty(String propertyName);
 
     /**
+     * Returns all the properties from the map, with all values resolved of any placeholders (variables i.e. ${xxx}).
+     * @return
+     */
+    public Properties getProperties();
+
+    /**
      * Returns a property from the map. If a property does not exist null will be returned.
      * The returned property value will <b>NOT</b> have had its value resolved of any placeholders
      * (variables i.e. ${xxx}).
@@ -47,5 +53,6 @@ public interface PropertiesResolver {
      */
     String getUnResolvedProperty(String propertyName);
 
-
 }
+
+

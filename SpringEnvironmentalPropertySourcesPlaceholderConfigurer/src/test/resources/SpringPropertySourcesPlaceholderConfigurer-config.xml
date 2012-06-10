@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:xx.properties"/>
+    </bean>
+    -->
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="propertySources">
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources">
+                <constructor-arg>
+                    <list>
+                        <ref bean="environmentalProperties"/>
+                        <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources" factory-method="getSystemProperties"/>
+                        <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources" factory-method="getSystemEnvironmentProperties"/>
+                    </list>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="environmentalProperties" class="org.springframework.core.env.PropertiesPropertySource">
+        <constructor-arg value="environmentProperties"/>
+        <constructor-arg>
+             <bean factory-bean="resolvedEnvironmentProperties" factory-method="getProperties">
+
+             </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="environmentalPropertiesFinder" class="org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder">
+        <constructor-arg>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader">
+                <constructor-arg value="/"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="propertiesValueResolver" class="org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder">
+        <property name="trimmingPropertyValues" value="true"/>
+        <property name="propertyValueResolver">
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver"/>
+        </property>
+    </bean>
+
+
+    <bean id="resolvedEnvironmentProperties" factory-bean="propertiesValueResolver" factory-method="build">
+        <constructor-arg>
+            <bean factory-bean="environmentalPropertiesFinder" factory-method="build"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="string" class="java.lang.String">
+        <constructor-arg value="${message}"/>
+    </bean>
+
+    <bean name="string-sys" class="java.lang.String">
+        <constructor-arg value="${sys}"/>
+    </bean>
+
+    <bean name="string-env" class="java.lang.String">
+        <constructor-arg value="${env}"/>
+    </bean>
+
+    <bean name="string-path" class="java.lang.String">
+        <constructor-arg value="${PATH}"/>
+    </bean>
+</beans>

@@ -66,4 +66,9 @@ public class EnvironmentSpecificPropertiesResolver implements PropertiesResolver
         return value;
     }
 
+    @Override
+    public Properties getProperties() {
+        return propertyValueResolver.resolvedPropertyValues(properties);
+    }
+
 }

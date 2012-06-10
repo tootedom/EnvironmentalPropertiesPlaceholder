@@ -21,6 +21,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.Environment
 import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 
 import java.util.List;
@@ -61,6 +62,11 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
         this.resourceLoaderForLoadingConfigurationProperties = locationOfConfiguration;
         this.setVariablesUsedForSwitchingConfiguration(DEFAULT_VARIABLES_USED_FOR_SWITCHING_CONFIGURATION);
     }
+
+    public EnvironmentSpecificPropertiesMergerBuilder(String locationOfConfiguration) {
+       this(new ClassPathResourceLoader(locationOfConfiguration));
+    }
+
 
 
     @Override
