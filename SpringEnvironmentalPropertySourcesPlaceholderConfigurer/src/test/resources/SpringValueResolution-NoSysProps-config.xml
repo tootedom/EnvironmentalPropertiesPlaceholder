@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:xx.properties"/>
+    </bean>
+    -->
+
+    <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.EnvironmentalPropertySourcesPlaceholderConfigurerWithSpringValueResolution">
+        <constructor-arg>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder">
+                <constructor-arg>
+                    <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader">
+                        <constructor-arg value="/"/>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+        <property name="systemPropertiesResolutionEnabled" value="false"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean name="string" class="java.lang.String">
+        <constructor-arg value="${message}"/>
+    </bean>
+
+    <bean name="string-sys" class="java.lang.String">
+        <constructor-arg value="${sys}"/>
+    </bean>
+
+    <bean name="string-env" class="java.lang.String">
+        <constructor-arg value="${env}"/>
+    </bean>
+</beans>

@@ -9,16 +9,21 @@
     </bean>
     -->
 
-    <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.EnvironmentalPropertySourcesPlaceholderConfigurer">
+    <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.EnvironmentalPropertySourcesPlaceholderConfigurerWithSpringValueResolution">
         <constructor-arg>
-                <props>
-                        <prop key="message">my ${message2} ${USER}</prop>
-                        <prop key="message2">hello</prop>
-                </props>
+            <null/>
         </constructor-arg>
     </bean>
 
     <bean name="string" class="java.lang.String">
         <constructor-arg value="${message}"/>
+    </bean>
+
+    <bean name="string-sys" class="java.lang.String">
+        <constructor-arg value="${sys}"/>
+    </bean>
+
+    <bean name="string-env" class="java.lang.String">
+        <constructor-arg value="${env}"/>
     </bean>
 </beans>
