@@ -15,10 +15,8 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.merger;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
@@ -30,7 +28,6 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -49,7 +46,7 @@ public class TestMaskedProperties {
     public void setup() {
         LoggerContext lc = new LoggerContext();
         Logger root = lc.getLogger(Logger.ROOT_LOGGER_NAME);
-        Logger green = (Logger) LoggerFactory.getLogger(SystemAndEnvironmentSpecificPropertiesMerger.class);
+        Logger green = (Logger) LoggerFactory.getLogger(EnvironmentSpecificPropertiesMerger.class);
         output = new ByteArrayOutputStream();
 
         green.setAdditive(true);

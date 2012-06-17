@@ -15,14 +15,11 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.builder;
 
+import org.greencheek.utils.environment.propertyplaceholder.merger.EnvironmentSpecificPropertiesMerger;
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.merger.SystemAndEnvironmentSpecificPropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.EnvironmentSpecificPropertiesResolver;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesResolver;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoaderFactory;
 
 import java.util.List;
 import java.util.Properties;
@@ -53,20 +50,33 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
     private OperatingEnvironmentVariableReader operatingEnvironmentVariableReader = DEFAULT_OPERATING_ENVIRONMENT_VARIABLE_READER;
 
     private ResourceLoader resourceLoaderForLoadingConfigurationProperties;
-    private ResourceLoader operationalOverridesResourceLoader = DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES;
+    private ResourceLoader resourceLoaderForOperationalOverrides = DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES;
+
+    private ResourceLoaderFactory resourceLoaderFactory = DEFAULT_RESOURCE_LOADER_FACTORY;
 
     public EnvironmentSpecificPropertiesMergerBuilder() {
         this(DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES);
     }
 
+    public EnvironmentSpecificPropertiesMergerBuilder(String locationOfConfiguration) {
+        this(DEFAULT_RESOURCE_LOADER_FACTORY.createResourceLoader(locationOfConfiguration));
+    }
+
+    public EnvironmentSpecificPropertiesMergerBuilder(ResourceLoaderFactory resourceLoaderFactory) {
+        this(resourceLoaderFactory,DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES);
+    }
+
     public EnvironmentSpecificPropertiesMergerBuilder(ResourceLoader locationOfConfiguration) {
+        this(DEFAULT_RESOURCE_LOADER_FACTORY,locationOfConfiguration);
+    }
+
+    public EnvironmentSpecificPropertiesMergerBuilder(ResourceLoaderFactory resourceLoaderFactory, ResourceLoader locationOfConfiguration) {
+        this.resourceLoaderFactory = resourceLoaderFactory;
         this.resourceLoaderForLoadingConfigurationProperties = locationOfConfiguration;
         this.setVariablesUsedForSwitchingConfiguration(DEFAULT_VARIABLES_USED_FOR_SWITCHING_CONFIGURATION);
     }
 
-    public EnvironmentSpecificPropertiesMergerBuilder(String locationOfConfiguration) {
-       this(new ClassPathResourceLoader(locationOfConfiguration));
-    }
+
 
 
 
@@ -106,19 +116,31 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
 
 
     @Override
-    public PropertiesMergerBuilder setOperationalOverridesResourceLoader(ResourceLoader resourceLoader) {
-        this.operationalOverridesResourceLoader = resourceLoader;
+    public PropertiesMergerBuilder setResourceLoaderForOperationalOverrides(ResourceLoader resourceLoader) {
+        this.resourceLoaderForOperationalOverrides = resourceLoader;
         return this;
     }
 
     @Override
-    public ResourceLoader getOperationalOverridesResourceLoader() {
-        return this.operationalOverridesResourceLoader;
+    public PropertiesMergerBuilder setLocationForLoadingOperationalOverrides(String location) {
+        this.resourceLoaderForOperationalOverrides = resourceLoaderFactory.createResourceLoader(location);
+        return this;
+    }
+
+    @Override
+    public ResourceLoader getResourceLoaderForOperationalOverrides() {
+        return this.resourceLoaderForOperationalOverrides;
     }
 
     @Override
     public PropertiesMergerBuilder setResourceLoaderForLoadingConfigurationProperties(ResourceLoader loader) {
         this.resourceLoaderForLoadingConfigurationProperties = loader;
+        return this;
+    }
+
+    @Override
+    public PropertiesMergerBuilder setLocationForLoadingConfigurationProperties(String location) {
+        this.resourceLoaderForLoadingConfigurationProperties = resourceLoaderFactory.createResourceLoader(location);
         return this;
     }
 
@@ -217,7 +239,7 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
 
     @Override
     public PropertiesMerger build() {
-        return new SystemAndEnvironmentSpecificPropertiesMerger(this);
+        return new EnvironmentSpecificPropertiesMerger(this);
     }
 
     @Override

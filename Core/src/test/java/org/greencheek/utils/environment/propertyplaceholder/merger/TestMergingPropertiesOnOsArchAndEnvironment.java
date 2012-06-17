@@ -85,7 +85,7 @@ public class TestMergingPropertiesOnOsArchAndEnvironment
         resolverTargetPlatformWithOpsOverridesBuilder = new EnvironmentSpecificPropertiesMergerBuilder(new ClassPathResourceLoader("/overrides_testing/config"));
         resolverTargetPlatformWithOpsOverridesBuilder.setVariablesUsedForSwitchingConfiguration(new String[] {"TARGET_PLATFORM"});
         resolverTargetPlatformWithOpsOverridesBuilder.setNameOfDefaultPropertiesFile("environment");
-        resolverTargetPlatformWithOpsOverridesBuilder.setOperationalOverridesResourceLoader(new ClassPathResourceLoader("/overrides_testing/config/platform_opsoverrides/config"));
+        resolverTargetPlatformWithOpsOverridesBuilder.setResourceLoaderForOperationalOverrides(new ClassPathResourceLoader("/overrides_testing/config/platform_opsoverrides/config"));
         resolverTargetPlatformWithOpsOverridesBuilder.setOperatingEnvironmentVariableReader(new OperatingEnvironmentVariableReader() {
             @Override
             public String getProperty(String property, String defaultValue) {

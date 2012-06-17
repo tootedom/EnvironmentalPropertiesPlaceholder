@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
  * Date: 09/06/2012
  * Time: 12:26
  */
-public class SystemAndEnvironmentSpecificPropertiesMerger implements PropertiesMerger {
+public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
 
-    private static final Logger log = LoggerFactory.getLogger(SystemAndEnvironmentSpecificPropertiesMerger.class);
+    private static final Logger log = LoggerFactory.getLogger(EnvironmentSpecificPropertiesMerger.class);
 
     private final Pattern sensitivePropertyMasker;
     private final boolean outputtingPropertiesInDebugMode;
@@ -56,12 +56,13 @@ public class SystemAndEnvironmentSpecificPropertiesMerger implements PropertiesM
     private final String applicationName;
     private final ResourceLoader operationalOverridesResourceLoader;
     private final ResourceLoader resourceLoaderForLoadingConfigurationProperties;
+    private final String relativeLocationOfFilesOverridingDefaultProperties;
+
 
 
     private final OperatingEnvironmentVariableReader operatingEnvironmentVariableReader;
 
 
-    private final String relativeLocationOfFilesOverridingDefaultProperties;
 
 
     private final Properties mergedProperties;
@@ -72,11 +73,11 @@ public class SystemAndEnvironmentSpecificPropertiesMerger implements PropertiesM
      */
     private final List<String> possibleOverrideFiles = new ArrayList<String>();
 
-    public SystemAndEnvironmentSpecificPropertiesMerger(PropertiesMergerBuilder builder) {
+    public EnvironmentSpecificPropertiesMerger(PropertiesMergerBuilder builder) {
 
         this.applicationName = builder.getApplicationName();
 
-        ResourceLoader opsOverride =   builder.getOperationalOverridesResourceLoader();
+        ResourceLoader opsOverride =   builder.getResourceLoaderForOperationalOverrides();
         if(opsOverride == PropertiesMergerBuilder.DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES) {
             if(applicationName!=null && applicationName.trim().length()>0) {
                 opsOverride = new FileSystemResourceLoader(PropertiesMergerBuilder.DEFAULT_OPERATIONAL_OVERRIDE_LOCATION + applicationName + PropertiesMergerBuilder.DEFAULT_CONFIGURATION_LOCATION);
@@ -273,8 +274,7 @@ public class SystemAndEnvironmentSpecificPropertiesMerger implements PropertiesM
     }
 
     private Properties mergeProperties() {
-        Properties merged = new Properties();
-
+        Properties merged;
 
         ResourceLoader defaultAppPropertiesLoader = getResourceLoaderForLoadingConfigurationProperties();
         File defaultProperties = defaultAppPropertiesLoader.getFile(getNameOfDefaultPropertiesFile());

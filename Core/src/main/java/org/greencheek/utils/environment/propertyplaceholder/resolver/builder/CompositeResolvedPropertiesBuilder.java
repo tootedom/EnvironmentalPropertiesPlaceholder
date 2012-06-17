@@ -22,12 +22,8 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesR
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolverConfig;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolverConfig;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -98,20 +94,30 @@ public class CompositeResolvedPropertiesBuilder
     }
 
     @Override
-    public PropertiesMergerBuilder setOperationalOverridesResourceLoader(ResourceLoader resourceLoader) {
-        mergerBuilder.setOperationalOverridesResourceLoader(resourceLoader);
+    public PropertiesMergerBuilder setResourceLoaderForOperationalOverrides(ResourceLoader resourceLoader) {
+        mergerBuilder.setResourceLoaderForOperationalOverrides(resourceLoader);
         return this;
     }
 
     @Override
-    public ResourceLoader getOperationalOverridesResourceLoader() {
-        return mergerBuilder.getOperationalOverridesResourceLoader();
+    public PropertiesMergerBuilder setLocationForLoadingOperationalOverrides(String location) {
+        return mergerBuilder.setLocationForLoadingOperationalOverrides(location);
+    }
+
+    @Override
+    public ResourceLoader getResourceLoaderForOperationalOverrides() {
+        return mergerBuilder.getResourceLoaderForOperationalOverrides();
     }
 
     @Override
     public PropertiesMergerBuilder setResourceLoaderForLoadingConfigurationProperties(ResourceLoader loader) {
         mergerBuilder.setResourceLoaderForLoadingConfigurationProperties(loader);
         return this;
+    }
+
+    @Override
+    public PropertiesMergerBuilder setLocationForLoadingConfigurationProperties(String location) {
+        return mergerBuilder.setLocationForLoadingConfigurationProperties(location);
     }
 
     @Override

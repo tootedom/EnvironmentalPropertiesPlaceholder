@@ -24,20 +24,26 @@
         </property>
     </bean>
 
+
     <bean id="environmentalProperties" class="org.springframework.core.env.PropertiesPropertySource">
-        <constructor-arg value="environmentProperties"/>
+        <constructor-arg value="myEnvironmentProperties"/>
         <constructor-arg>
-             <bean factory-bean="environmentalPropertiesFinder" factory-method="buildProperties"/>
+            <bean factory-bean="propertiesResolver" factory-method="buildResolvedProperties"/>
         </constructor-arg>
     </bean>
 
-    <bean id="environmentalPropertiesFinder" class="org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder">
+    <bean id="propertiesResolver" class="org.greencheek.utils.environment.propertyplaceholder.resolver.builder.CompositeResolvedPropertiesBuilder">
         <constructor-arg>
-            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader">
-                <constructor-arg value="/"/>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver">
+                <constructor-arg value="false"/> <!-- resolve env vars -->
+                <constructor-arg value="false"/> <!-- resolve system properties -->
             </bean>
         </constructor-arg>
+        <property name="locationForLoadingConfigurationProperties" value="classpath:/"/>
+        <property name="locationForLoadingOperationalOverrides" value="classpath:/opsoverrides"/>
+        <property name="relativeLocationOfFilesOverridingDefaultProperties" value="environments"/>
     </bean>
+
 
     <bean name="string" class="java.lang.String">
         <constructor-arg value="${message}"/>
@@ -54,4 +60,9 @@
     <bean name="string-path" class="java.lang.String">
         <constructor-arg value="${PATH}"/>
     </bean>
+
+    <bean name="string-ops" class="java.lang.String">
+        <constructor-arg value="${tobeopsoverriddren}"/>
+    </bean>
+
 </beans>

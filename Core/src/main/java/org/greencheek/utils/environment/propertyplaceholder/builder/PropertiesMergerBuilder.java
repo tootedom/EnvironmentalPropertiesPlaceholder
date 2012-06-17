@@ -20,9 +20,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesR
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.JavaPlatformOperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.FileSystemResourceLoader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.*;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver;
 
@@ -53,6 +51,7 @@ public interface PropertiesMergerBuilder {
     final static String DEFAULT_CONFIGURATION_LOCATION = "/config";
     final static ResourceLoader DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES = new ClassPathResourceLoader(DEFAULT_CONFIGURATION_LOCATION);
     final static ResourceLoader DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES = new FileSystemResourceLoader(DEFAULT_OPERATIONAL_OVERRIDE_LOCATION);
+    final static ResourceLoaderFactory DEFAULT_RESOURCE_LOADER_FACTORY = new PrefixBasedResourceLoaderFactory();
 
     final static OperatingEnvironmentVariableReader DEFAULT_OPERATING_ENVIRONMENT_VARIABLE_READER = new JavaPlatformOperatingEnvironmentVariableReader();
 
@@ -75,11 +74,89 @@ public interface PropertiesMergerBuilder {
     public PropertiesMergerBuilder setSensitivePropertyMasker(Pattern pattern);
     public Pattern getSensitivePropertyMasker();
 
-    public PropertiesMergerBuilder setOperationalOverridesResourceLoader(ResourceLoader resourceLoader);
-    public ResourceLoader getOperationalOverridesResourceLoader();
-
+    /**
+     * Sets the resource loader from which to load the environmental properties.  This is the location
+     * from which to load the generic properties, that are to be overridden by environmental specific properties.
+     * See {@link #setLocationForLoadingConfigurationProperties(String)} for specifying the resource Loader via a
+     * string.
+     *
+     * @param loader The resource loader responsible for loading application configuration resources, for the application
+     *               defaults and then the environmental overrides.
+     * @return
+     */
     public PropertiesMergerBuilder setResourceLoaderForLoadingConfigurationProperties(ResourceLoader loader);
+
+    /**
+     * Sets the resource loader from which to load the environmental properties.  This is the location
+     * from which to load the generic properties, that are to be overridden by environmental specific properties.
+     * The location is specified via string.  This will be prefixed with a controlled volcabulary that is specific to the
+     * implementation, an example would be "classpath:/xxx" or "filesystem:/xxx" to specify that the properties are
+     * to be loaded from the classpath or filesystem.
+     * string.
+     *
+     * @param location The location from which the application defaults and then the environmental overrides are read
+     * @return
+     */
+    public PropertiesMergerBuilder setLocationForLoadingConfigurationProperties(String location);
+
+    /**
+     * Returns the resource loader that is responsible for loading the configuration properties, default and envrionmental
+     * overrides for an application.
+     *
+     * @return The resource loader used to load application properties
+     */
     public ResourceLoader getResourceLoaderForLoadingConfigurationProperties();
+
+    /**
+     * Sets the resource loader from which to load the environmental properties.  This is the location
+     * from which to source operationally overridden properties, which can also be overridden on an environmental basis.
+     * You would either choose to call this method or it's counter part (which might be easier)
+     * @{link #setLocationForLoadingOperationalOverrides(String)}
+     *
+     *
+     * @param resourceLoader The resource loader responsible for loading application configuration resources from a
+     *                       location that the operations teams can override values.
+     * @return
+     */
+    public PropertiesMergerBuilder setResourceLoaderForOperationalOverrides(ResourceLoader resourceLoader);
+
+    /**
+     * Sets the resource loader from which to load the environmental properties.  This is the location
+     * from which to source operationally overridden properties, which can also be overridden on an environmental basis.
+     * The location is specified via string.  This will be prefixed with a controlled volcabulary that is specific to the
+     * implementation, an example would be "classpath:/xxx" or "filesystem:/xxx" to specify that the properties are
+     * to be loaded from the classpath or filesystem.
+     * string.
+     *
+     * @param location The location from which the application defaults and then the environmental overrides are read
+     * @return
+     */
+    public PropertiesMergerBuilder setLocationForLoadingOperationalOverrides(String location);
+
+    /**
+     * The resource loader that is used to read the operations teams overrides for an applications configuration
+     * @return
+     */
+    public ResourceLoader getResourceLoaderForOperationalOverrides();
+
+    /**
+     * The location relative to {@link #setLocationForLoadingConfigurationProperties(String)} and {@link #setLocationForLoadingOperationalOverrides(String)}
+     * from which to read the application properties, which override the defaults, that are source based on environmental
+     * or system properties.
+     *
+     * @param relativeLocation The relative location in which application overrides based on environmental or system
+     *                         properties are read.
+     * @return A string representing a location relative to the Resource Loaders used for reading application properties
+     * and operational overrides
+     */
+    public PropertiesMergerBuilder setRelativeLocationOfFilesOverridingDefaultProperties(String relativeLocation);
+
+    /**
+     * Returns the relative location, relative to the ResourceLoaders, of where the environment and system specific
+     * property overrides are located
+     * @return
+     */
+    public String getRelativeLocationOfFilesOverridingDefaultProperties();
 
 
     public PropertiesMergerBuilder setExtensionForPropertiesFile( String suffix);
@@ -145,8 +222,7 @@ public interface PropertiesMergerBuilder {
      */
     public String[][] getVariablesUsedForSwitchingConfiguration();
 
-    public PropertiesMergerBuilder setRelativeLocationOfFilesOverridingDefaultProperties(String relativeLocation);
-    public String getRelativeLocationOfFilesOverridingDefaultProperties();
+
 
     public PropertiesMergerBuilder setDelimiterUsedForSeparatingSwitchingConfigurationVariables(char c);
     public char getDelimiterUsedForSeparatingSwitchingConfigurationVariables();
@@ -155,6 +231,9 @@ public interface PropertiesMergerBuilder {
 
     public PropertiesMergerBuilder setOperatingEnvironmentVariableReader(OperatingEnvironmentVariableReader variableReader);
     public OperatingEnvironmentVariableReader getOperatingEnvironmentVariableReader();
+
+
+
 
 
     public PropertiesMerger build();
