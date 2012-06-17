@@ -20,6 +20,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.environment
 import org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoDefaultPropertiesFileException;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.FileSystemResourceLoader;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.Resource;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,26 +206,26 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
 
     /**
      * For a given file, that represents a properties file, loads the contents into a Properties file
-     * @param file the file to convert to a Properties file.
+     * @param resource the file to convert to a Properties file.
      * @return a Properties object, will always return a properties object.
      */
-    private Properties load(File file) {
-        if(file == null) {
+    private Properties load(Resource resource) {
+        if(resource == null) {
             return new Properties();
         }
 
-        FileInputStream fis = null;
+        InputStream is = null;
         Properties p = null;
         try {
-            log.debug("loading properties from {}",file.getAbsolutePath());
-            fis = new FileInputStream(file);
-            p = load(fis);
+            log.debug("loading properties from {}",resource);
+            is = resource.getStream();
+            p = load(is);
         } catch(IOException e ) {
-            log.warn("Unable to read file: {}",file.getAbsolutePath(),e);
+            log.warn("Unable to read file: {}",resource,e);
         } finally {
-            if(fis!=null) {
+            if(is!=null) {
                 try {
-                    fis.close();
+                    is.close();
                 } catch (Exception e) {
 
                 }
@@ -283,25 +284,27 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
 
     }
 
-    private File[] loadFiles(List<String> files, ResourceLoader resourceLoader) {
-        List<File> foundFiles = new ArrayList<File>(files.size());
+    private Resource[] loadFiles(List<String> files, ResourceLoader resourceLoader) {
+        List<Resource> foundFiles = new ArrayList<Resource>(files.size());
 
 
         for(String location : files) {
-            File override = resourceLoader.getFile(location);
-            if(override!=null && override.canRead())
+            Resource override = resourceLoader.getFile(location);
+            if(override.isAvailable())
                 foundFiles.add(override);
         }
 
-        return foundFiles.toArray(new File[foundFiles.size()]);
+        return foundFiles.toArray(new Resource[foundFiles.size()]);
     }
 
     private Properties mergeProperties() {
         Properties merged;
 
         ResourceLoader defaultAppPropertiesLoader = getResourceLoaderForLoadingConfigurationProperties();
-        File defaultProperties = defaultAppPropertiesLoader.getFile(getNameOfDefaultPropertiesFile());
-        if(defaultProperties==null || !defaultProperties.canRead()) {
+        Resource defaultProperties = defaultAppPropertiesLoader.getFile(getNameOfDefaultPropertiesFile());
+
+        log.debug("Attempting to source default properties file {}",defaultProperties);
+        if(!defaultProperties.isAvailable()) {// || !defaultProperties.canRead()) {
             String message = "Unable to source default properties file:" + getNameOfDefaultPropertiesFile();
             log.warn(message);
             if(isStrictMergingOfProperties())
@@ -311,7 +314,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
 
         merged = load(defaultProperties);
 
-        for(File file : loadFiles(getPossibleOverrideFiles(),defaultAppPropertiesLoader)) {
+        for(Resource file : loadFiles(getPossibleOverrideFiles(),defaultAppPropertiesLoader)) {
             merged = mergeProperties(merged,load(file),strictMergingOfProperties);
 
         }
@@ -345,7 +348,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
         List<String> possibleOverrideFiles = new ArrayList<String>(getPossibleOverrideFiles());
         possibleOverrideFiles.add(0,getNameOfDefaultPropertiesFile());
 
-        for(File file : loadFiles(possibleOverrideFiles,overridesLocationLoader)) {
+        for(Resource file : loadFiles(possibleOverrideFiles,overridesLocationLoader)) {
             merged = mergeProperties(merged,load(file),strictMergingOfProperties);
         }
 

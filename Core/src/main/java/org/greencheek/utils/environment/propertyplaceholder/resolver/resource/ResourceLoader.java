@@ -40,10 +40,11 @@ public interface ResourceLoader
      * </ul>
      *
      *
+     *
      * @param resource of the file to get from the classpath
      * @return The File object that represents the resource from the classpath
      */
-    public File getFile(String resource);
+    public Resource getFile(String resource);
 
 
     /**

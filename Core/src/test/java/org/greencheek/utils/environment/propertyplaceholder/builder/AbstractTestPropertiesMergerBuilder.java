@@ -17,6 +17,7 @@ package org.greencheek.utils.environment.propertyplaceholder.builder;
 
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ClassPathResourceLoader;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.Resource;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +76,7 @@ public abstract class AbstractTestPropertiesMergerBuilder {
     public void testCanSetOperationsOverridesResourceLoader() {
         builder.setResourceLoaderForOperationalOverrides(new ClassPathResourceLoader("/xyz/xyz/"));
         ResourceLoader loader = builder.getResourceLoaderForOperationalOverrides();
-        File f = loader.getFile("xx.properties");
+        Resource f = loader.getFile("xx.properties");
         assertNotNull(f);
     }
 
@@ -83,7 +84,7 @@ public abstract class AbstractTestPropertiesMergerBuilder {
     public void testCanSetResourceLoaderForLoadingConfigurationProperties() {
         builder.setResourceLoaderForLoadingConfigurationProperties(new ClassPathResourceLoader("/xyz/xyz/"));
         ResourceLoader loader = builder.getResourceLoaderForLoadingConfigurationProperties();
-        File f = loader.getFile("xx.properties");
+        Resource f = loader.getFile("xx.properties");
         assertNotNull(f);
     }
 

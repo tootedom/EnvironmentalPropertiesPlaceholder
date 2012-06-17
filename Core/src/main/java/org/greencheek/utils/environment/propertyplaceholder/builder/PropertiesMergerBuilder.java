@@ -62,7 +62,10 @@ public interface PropertiesMergerBuilder {
     final static String DEFAULT_DEFAULT_PROPERTIES_FILENAME = "default";
     final static boolean DEFAULT_STRICT_MERGING_OF_PROPERTIES = true;
     final static String DEFAULT_RELATIVE_LOCATION_OF_FILES_OVERRIDE_DEFAULT = "environments/";
-    final static String DEFAULT_OPERATIONAL_OVERRIDE_LOCATION = "/data/opsoverrides/";
+    final static String DEFAULT_OPERATIONAL_OVERRIDE_LOCATION = (System.getProperty("os.name")==null ||
+                                                                 System.getProperty("os.name").toLowerCase().startsWith("win"))
+                                                                ? "c:/data/opsoverrides/" : "/data/opsoverrides/" ;
+
     final static String DEFAULT_CONFIGURATION_LOCATION = "/config";
     final static ResourceLoader DEFAULT_RESOURCE_LOADER_FOR_LOADING_CONFIGURATION_PROPERTIES = new ClassPathResourceLoader(DEFAULT_CONFIGURATION_LOCATION);
     final static ResourceLoader DEFAULT_RESOURCE_LOADER_FOR_OPERATION_OVERRIDES = new FileSystemResourceLoader(DEFAULT_OPERATIONAL_OVERRIDE_LOCATION);

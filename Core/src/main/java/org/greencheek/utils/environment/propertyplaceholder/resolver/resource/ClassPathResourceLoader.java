@@ -59,11 +59,10 @@ public class ClassPathResourceLoader implements ResourceLoader {
      * This will still attempt to find the file from an absolute location</li>
      * </ul>
      *
-     *
      * @param resource of the file to get from the classpath
      * @return The File object that represents the resource from the classpath
      */
-    public File getFile(String resource) {
+    public Resource getFile(String resource) {
         URL base = null;
 
         // strip out the starting '/'
@@ -74,9 +73,10 @@ public class ClassPathResourceLoader implements ResourceLoader {
         if (base == null) base = Thread.currentThread().getContextClassLoader().getResource(resource);
         if (base == null) base = ClassPathResourceLoader.class.getClassLoader().getResource(resource);
 
-        if (base == null) return null;
+        //if (base == null) return null;
 
-        return getFile(base);
+
+        return new ClassPathResource(base);
     }
 
     @Override

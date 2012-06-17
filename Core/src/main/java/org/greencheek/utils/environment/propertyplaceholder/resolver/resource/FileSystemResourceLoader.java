@@ -48,14 +48,15 @@ public class FileSystemResourceLoader implements ResourceLoader {
      * Given resource, which should be absolute from the filesystem root, if not
      * the method will adjust the resource to prepend with the root.
      *
+     *
      * @param resource of the file to get from the file system
      * @return
      */
-    public File getFile(String resource) {
+    public Resource getFile(String resource) {
         if (resource == null || resource.trim().length() == 0) return null;
         if (resource.startsWith("/")) resource = resource.substring(1);
 
-        return new File(baseLocation + resource).getAbsoluteFile();
+        return new FileSystemResource(new File(baseLocation + resource).getAbsoluteFile());
     }
 
     @Override

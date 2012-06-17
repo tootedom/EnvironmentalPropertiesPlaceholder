@@ -28,15 +28,15 @@ import static org.junit.Assert.assertEquals;
  * <ol>
  *     <li>/config/default.props</li>
  *     <li>/config/environments/prod.props</li>
- *     <li>/data/opsoverrides/appname/defaults.properties</li>
- *     <li>/data/opsoverrides/appname/environments/prod.props</li>
+ *     <li>/data/opsoverrides/appname/config/defaults.properties</li>
+ *     <li>/data/opsoverrides/appname/config/environments/prod.props</li>
  * </ol>
  * </p>
  * <p>
  *     The files are varied on the System property: ENV
  * </p>
  *
- * This is not a unit test, it relies on /data/opsoverrides/appname, i want to actually test that
+ * This is not a unit test, it relies on /data/opsoverrides/appname/config, i want to actually test that
  * the default read from the appropriate default locations.
  *
  * Looking for result of:
@@ -46,8 +46,8 @@ import static org.junit.Assert.assertEquals;
        ops-override-env=prod
        ops-override=default
  * </pre>
- * /data/opsoverrides/appname/environments/prod.props contains "ops-override-env=prod"
- * /data/opsoverrides/appname/default.props contains "ops-override=default"
+ * /data/opsoverrides/appname/config/environments/prod.props contains "ops-override-env=prod"
+ * /data/opsoverrides/appname/config/default.props contains "ops-override=default"
  *
  *
  * User: dominictootell

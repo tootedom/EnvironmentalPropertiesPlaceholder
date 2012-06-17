@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import static org.junit.Assert.assertNotNull;
@@ -37,31 +38,37 @@ public class TestResourceLoader
     @Before
     public void setup() {
         classPath = new ClassPathResourceLoader("/");
-        File f = classPath.getFile("/xx.properties");
-        fileSystem = new FileSystemResourceLoader(f.getAbsoluteFile().getParentFile().getAbsolutePath());
+        File currentLocation;
+        try {
+            currentLocation= new File(this.getClass().getClassLoader().getResource("xx.properties").toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        Resource f = classPath.getFile("/xx.properties");
+        fileSystem = new FileSystemResourceLoader(currentLocation.getAbsoluteFile().getParentFile().getAbsolutePath());
 
     }
 
 
     @Test
     public void testClassPathResourceLoader() {
-        File f = classPath.getFile("/xx.properties");
+        Resource f = classPath.getFile("/xx.properties");
         assertNotNull(f);
         testProperties(f);
     }
 
     @Test
     public void testFileSystemResourceLoader() {
-        File f2 = fileSystem.getFile("xx.properties");
+        Resource f2 = fileSystem.getFile("xx.properties");
         assertNotNull(f2);
         testProperties(f2);
     }
 
 
-    public void testProperties(File f) {
+    public void testProperties(Resource f) {
         InputStream is = null;
         try {
-            is = new FileInputStream(f);
+            is = f.getStream();
             Properties p = new Properties();
             p.load(is);
             assertTrue(p.containsKey("message"));
