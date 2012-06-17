@@ -33,6 +33,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Thread safe implementation of the @{link #PropertiesMerger}.  The implementation is constructed via a
+ * @{link #PropertiesMergerBuilder}.
+ *
+ * The properties are obtained first from either a location on the classpath or filesystem.  These set of
+ * properties can vary depending upon a given set of environment or system variables: i.e:
+ * <ol>
+ *     <li>Read default.props</li>
+ *     <li>Override the properties set in default.props with the contents
+ *     of a .properties file in the environments/ folder that represents the current value of the ENV system property, i.e. dev.properties</li>
+ * </ol>
+ * The properties files that are read that override default can vary not only on one ENV variable but could vary on several:
+ * <ol>
+ *     <li>Read default.props</li>
+ *     <li>Override the properties set in default.props with the contents
+ *     of a .properties file in the environments/ folder that represents the current value of the ${ENV} system property, i.e. dev.properties</li>
+ *     <li>Override dev.properties with a .properties file that represents the current value of ${ENV}.${OS.ARCH} system and env properties i.e. dev.x86_64.properties</li>
+ * </ol>
+ * The obtained properties' values are not modified in any way.  Variables contained within the values should not be
+ * modified or resolved.
+ *
+ * The implementation is thread safe.
+ *
  * User: dominictootell
  * Date: 09/06/2012
  * Time: 12:26
@@ -58,12 +80,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
     private final ResourceLoader resourceLoaderForLoadingConfigurationProperties;
     private final String relativeLocationOfFilesOverridingDefaultProperties;
 
-
-
     private final OperatingEnvironmentVariableReader operatingEnvironmentVariableReader;
-
-
-
 
     private final Properties mergedProperties;
 
@@ -104,6 +121,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
         this.relativeLocationOfFilesOverridingDefaultProperties = builder.getRelativeLocationOfFilesOverridingDefaultProperties();
         this.sensitivePropertyMasker = builder.getSensitivePropertyMasker();
         this.outputtingPropertiesInDebugMode = builder.isOutputtingPropertiesInDebugMode();
+
 //        SERVER_ENV
 //        SERVER_ENV.TARGET_ENV
 //        SERVER_ENV.SERVER_TYPE
@@ -191,6 +209,10 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
      * @return a Properties object, will always return a properties object.
      */
     private Properties load(File file) {
+        if(file == null) {
+            return new Properties();
+        }
+
         FileInputStream fis = null;
         Properties p = null;
         try {
@@ -240,8 +262,9 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
 
         for (Object key : second.keySet()) {
             if (first.get(key)==null) {
-                String msg = "Property " + key + " from overriding properties does not exist in original properties";
+                String msg = "NoMatchingPropertyWarning: Property \"" + key + "\" from overriding properties does not exist in original properties";
                 if (strict) {
+                    log.warn(msg);
                     throw new NoMatchingPropertyException(msg);
                 } else {
                     log.warn(msg);

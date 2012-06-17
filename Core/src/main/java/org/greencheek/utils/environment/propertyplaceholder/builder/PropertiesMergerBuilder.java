@@ -29,6 +29,21 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
+ * <p>
+ * The PropertiesMerger is the class that is responsible for locating resources in the classpath and filesystem
+ * and producing a Properties object that is a combination of:
+ * <ol>
+ *     <li>Default Application Properties</li>
+ *     <li>Overrides based on environmental or System properties</li>
+ *     <li>Default Operational Overrides</li>
+ *     <li>Operational Overrides based on environmental or system properties</li>
+ * </ol>
+ * </p>
+ * <p>
+ *     This builder is meant for a single thread to construct the PropertiesMerger, that can then be used across multiple
+ *     threads
+ * </p>
+ *
  * User: dominictootell
  * Date: 20/05/2012
  * Time: 13:31
@@ -111,7 +126,7 @@ public interface PropertiesMergerBuilder {
      * Sets the resource loader from which to load the environmental properties.  This is the location
      * from which to source operationally overridden properties, which can also be overridden on an environmental basis.
      * You would either choose to call this method or it's counter part (which might be easier)
-     * @{link #setLocationForLoadingOperationalOverrides(String)}
+     * @{link #setLocationForLoadingOperationalOverrides(String)}.
      *
      *
      * @param resourceLoader The resource loader responsible for loading application configuration resources from a
@@ -159,17 +174,54 @@ public interface PropertiesMergerBuilder {
     public String getRelativeLocationOfFilesOverridingDefaultProperties();
 
 
+    /**
+     * Properties files usually have the extension: ".properties".  This gives you the ability to specify a different extension
+     * DO NOT INCLUDE separator (i.e. '.')
+     *
+     * @param suffix the suffix for the properties files
+     * @return
+     */
     public PropertiesMergerBuilder setExtensionForPropertiesFile( String suffix);
+
+    /**
+     * Returns the extension used for the properties file
+     * @return
+     */
     public String getExtensionForPropertiesFile();
 
 
+    /**
+     * The separator for extension and the properties file name. i..e '.' in ".properties"
+     * @param separator
+     * @return
+     */
     public PropertiesMergerBuilder setExtensionSeparatorCharForPropertiesFile(char separator);
+
+    /**
+     * Returns the separator.
+     * @return
+     */
     public char getExtensionSeparatorCharForPropertiesFile();
 
-
+    /**
+     * Name of the default properties file (this DOES NOT include the extension).  This is just the name
+     *
+     * @param defaultName
+     * @return
+     */
     public PropertiesMergerBuilder setNameOfDefaultPropertiesFile(String defaultName);
+
+    /**
+     * Name of the default properties file
+     * @return
+     */
     public String getNameOfDefaultPropertiesFile();
 
+    /**
+     *
+     * @param strict
+     * @return
+     */
     public PropertiesMergerBuilder setStrictMergingOfProperties(boolean strict);
     public boolean isStrictMergingOfProperties();
 
@@ -181,7 +233,7 @@ public interface PropertiesMergerBuilder {
     /**
      * Sets the list of variables on which the relevant set of resources (properties)
      * will be sourced.  I.e.  USER, LANG, or more likely on a production platform : ENV, os.arch.
-     * This means that the properties resolver would look for a default file (i.e. default.properties),
+     * This means that the properties resolver would look for a default file (i.e. default.props),
      * and then for a properties file: <ENV>.properties (i.e. production.properties) to merge on top of the default
      * properties.  Then it would look for <ENV>.<os.arch>.properties (i.e. production.x86_64.properties)
      * to merge on top of those previous properties.
@@ -199,7 +251,7 @@ public interface PropertiesMergerBuilder {
     /**
      * Sets the list of variables on which the relevant set of resources (properties), via an array of comma separated
      * String values: [ "ENV", "ENV,os.arch" ], will be sourced.
-     * This means that the properties resolver would look for a default file (i.e. default.properties),
+     * This means that the properties resolver would look for a default file (i.e. default.props),
      * and then for a properties file: <ENV>.properties (i.e. production.properties) to merge on top of the default
      * properties.  Then it would look for <ENV>.<os.arch>.properties (i.e. production.x86_64.properties)
      * to merge on top of those previous properties.

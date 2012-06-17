@@ -15,6 +15,8 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.builder;
 
+import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder;
+import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesMergerBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
@@ -22,6 +24,7 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesR
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.ResourceLoader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;
+import org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver;
 
 import java.util.List;
 import java.util.Properties;
@@ -39,16 +42,42 @@ public class CompositeResolvedPropertiesBuilder
     private final PropertiesMergerBuilder mergerBuilder;
     private final PropertiesResolverBuilder resolverBuilder;
 
+
+    private static ValueResolver DEFAULT_VALUE_RESOLVER() {
+        try {
+            return DEFAULT_VALUE_RESOLVER.newInstance();
+        } catch (Exception e) {
+            return new VariablePlaceholderValueResolver();
+        }
+    }
+
+    private static PropertiesMergerBuilder DEFAULT_PROPERTIES_MERGER_BUILDER() {
+        try {
+            return DEFAULT_PROPERTIES_MERGER_BUILDER.newInstance();
+        } catch (Exception e) {
+            return new EnvironmentSpecificPropertiesMergerBuilder();
+        }
+    }
+
+
+    private static PropertiesResolverBuilder DEFAULT_PROPERTIES_RESOLVER_BUILDER() {
+        try {
+            return DEFAULT_PROPERTIES_RESOLVER_BUILDER.newInstance();
+        } catch (Exception e) {
+            return new EnvironmentSpecificPropertiesResolverBuilder();
+        }
+    }
+
     public CompositeResolvedPropertiesBuilder() {
-        this(ResolvedPropertiesBuilder.DEFAULT_VALUE_RESOLVER,
-             ResolvedPropertiesBuilder.DEFAULT_PROPERTIES_MERGER_BUILDER,
-             ResolvedPropertiesBuilder.DEFAULT_PROPERTIES_RESOLVER_BUILDER);
+        this(DEFAULT_VALUE_RESOLVER(),
+             DEFAULT_PROPERTIES_MERGER_BUILDER(),
+             DEFAULT_PROPERTIES_RESOLVER_BUILDER());
     }
 
     public CompositeResolvedPropertiesBuilder(ValueResolver resolver) {
         this(resolver,
-                ResolvedPropertiesBuilder.DEFAULT_PROPERTIES_MERGER_BUILDER,
-                ResolvedPropertiesBuilder.DEFAULT_PROPERTIES_RESOLVER_BUILDER);
+                DEFAULT_PROPERTIES_MERGER_BUILDER(),
+                DEFAULT_PROPERTIES_RESOLVER_BUILDER());
     }
 
     public CompositeResolvedPropertiesBuilder(ValueResolver valueResolver,
@@ -240,14 +269,10 @@ public class CompositeResolvedPropertiesBuilder
     }
 
     @Override
-    /**
-     * The ValueResolver is set in the constructor.  This method will NOT set the ValueResolver
-     */
     public PropertiesResolverBuilder setPropertyValueResolver(ValueResolver resolver) {
         resolverBuilder.setPropertyValueResolver(resolver);
         return this;
     }
-
 
     /**
      * @return

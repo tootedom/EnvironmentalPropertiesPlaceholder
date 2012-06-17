@@ -30,19 +30,22 @@ import java.util.Properties;
  * The properties are obtained first from either a location on the classpath or filesystem.  These set of
  * properties can vary depending upon a given set of environment or system variables: i.e:
  * <ol>
- *     <li>Read default.properties</li>
- *     <li>Override the properties set in default.properties with the contents
+ *     <li>Read default.props</li>
+ *     <li>Override the properties set in default.props with the contents
  *     of a .properties file in the environments/ folder that represents the current value of the ENV system property, i.e. dev.properties</li>
  * </ol>
  * The properties files that are read that override default can vary not only on one ENV variable but could vary on several:
  * <ol>
- *     <li>Read default.properties</li>
- *     <li>Override the properties set in default.properties with the contents
+ *     <li>Read default.props</li>
+ *     <li>Override the properties set in default.props with the contents
  *     of a .properties file in the environments/ folder that represents the current value of the ${ENV} system property, i.e. dev.properties</li>
  *     <li>Override dev.properties with a .properties file that represents the current value of ${ENV}.${OS.ARCH} system and env properties i.e. dev.x86_64.properties</li>
  * </ol>
  * The obtained properties' values are not modified in any way.  Variables contained within the values should not be
  * modified or resolved.
+ * </p>
+ * <p>
+ *     Implementations must be thread safe and usable across threads, and is the reason no setter exists in the interface
  * </p>
  *
  * User: dominictootell

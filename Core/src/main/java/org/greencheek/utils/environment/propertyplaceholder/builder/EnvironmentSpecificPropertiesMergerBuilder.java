@@ -151,7 +151,11 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
 
     @Override
     public PropertiesMergerBuilder setExtensionForPropertiesFile(String extensionForPropertiesFile) {
-        this.extensionForPropertiesFile = extensionForPropertiesFile;
+        if(extensionForPropertiesFile.indexOf('.')==0) {
+            this.extensionForPropertiesFile = extensionForPropertiesFile.substring(1);
+        } else {
+            this.extensionForPropertiesFile = extensionForPropertiesFile;
+        }
         return this;
     }
 
@@ -251,8 +255,8 @@ public class EnvironmentSpecificPropertiesMergerBuilder implements PropertiesMer
 
     @Override
     public PropertiesMergerBuilder setNameOfDefaultPropertiesFile(String defaultName) {
-        this.nameOfDefaultPropertiesFile = defaultName;
-        return this;
+       this.nameOfDefaultPropertiesFile = defaultName;
+       return this;
     }
 
     @Override

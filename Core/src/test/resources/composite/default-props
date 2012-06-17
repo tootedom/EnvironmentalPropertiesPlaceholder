@@ -1,0 +1,6 @@
+default=default
+platform=default
+ops-override-env=basedefault
+ops-override=basedefault
+environment=${PATH}
+systemproperty=${ENV_TYPE}

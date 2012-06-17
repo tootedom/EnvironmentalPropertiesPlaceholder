@@ -26,10 +26,10 @@ import static org.junit.Assert.assertEquals;
  * Tests that we can create the resolver to merge the properties in the following order,
  * Which are the defaults for the builders:
  * <ol>
- *     <li>/config/default.properties</li>
- *     <li>/config/environments/prod.properties</li>
+ *     <li>/config/default.props</li>
+ *     <li>/config/environments/prod.props</li>
  *     <li>/data/opsoverrides/appname/defaults.properties</li>
- *     <li>/data/opsoverrides/appname/environments/prod.properties</li>
+ *     <li>/data/opsoverrides/appname/environments/prod.props</li>
  * </ol>
  * </p>
  * <p>
@@ -46,8 +46,8 @@ import static org.junit.Assert.assertEquals;
        ops-override-env=prod
        ops-override=default
  * </pre>
- * /data/opsoverrides/appname/environments/prod.properties contains "ops-override-env=prod"
- * /data/opsoverrides/appname/default.properties contains "ops-override=default"
+ * /data/opsoverrides/appname/environments/prod.props contains "ops-override-env=prod"
+ * /data/opsoverrides/appname/default.props contains "ops-override=default"
  *
  *
  * User: dominictootell

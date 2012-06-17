@@ -38,9 +38,9 @@ import java.util.Properties;
  */
 public interface ResolvedPropertiesBuilder  {
 
-    public static final ValueResolver DEFAULT_VALUE_RESOLVER = new VariablePlaceholderValueResolver();
-    public static final PropertiesMergerBuilder DEFAULT_PROPERTIES_MERGER_BUILDER = new EnvironmentSpecificPropertiesMergerBuilder();
-    public static final PropertiesResolverBuilder DEFAULT_PROPERTIES_RESOLVER_BUILDER = new EnvironmentSpecificPropertiesResolverBuilder();
+    public static final Class<? extends ValueResolver> DEFAULT_VALUE_RESOLVER = VariablePlaceholderValueResolver.class;
+    public static final Class<? extends PropertiesMergerBuilder> DEFAULT_PROPERTIES_MERGER_BUILDER = EnvironmentSpecificPropertiesMergerBuilder.class;
+    public static final Class<? extends PropertiesResolverBuilder> DEFAULT_PROPERTIES_RESOLVER_BUILDER = EnvironmentSpecificPropertiesResolverBuilder.class;
 
     /**
      * Returns the set of properties, with all embedded property values resolved.  The properties themselves
