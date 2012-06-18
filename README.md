@@ -1,5 +1,7 @@
-Environmental Properties Merget.
+Environmental Properties Merger.
 ---------------------------------
+
+{:toc}
 
 ```
    Not Yet Available in Maven Repo
@@ -52,6 +54,7 @@ What this gives you is the ability to have different configuration deployed alon
 varying configuration based on environmental settings.
 
 ***
+## Multi Environmental Variable Configuration
 
 The library goes one step futher and allows you to configure the environmental setting so that you can differ not
 just on one environmental or system property, but on a sequence of environmental variables.  For example, imagine
@@ -65,7 +68,6 @@ order fashion such that it sources:
 
     resolverEnvAndOsBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
     resolverEnvAndOsBuilder.setVariablesUsedForSwitchingConfiguration(new String[] {"ENV","ENV,os.arch"});
-
     └── config
         ├── default.properties
         └── environments
@@ -73,6 +75,7 @@ order fashion such that it sources:
             └── production.x86_64.properties
 
 ***
+## Operational Overrides
 
 The library also has the concept of "*Operational Overrides*".  This gives the operations department a location on the
 file system in which they can overwrite a specific property value used by your application without having to modify the
@@ -80,6 +83,9 @@ configuration that you distribute with your application.  This can be useful for
 database connection strings etc; that only the operations department might know about.
 
 By default the library will look for these overrides within the directory (on the filesystem),
-in /data/opsoverrides/*<appname>*/config  (the value of *appname* you need to specify).
+in /data/opsoverrides/*<appname>*/config  (the value of *appname* you need to specify.  On a windows machine the default
+is c:\data\opsoverrides\*<appname>*\config).
+
+The location of where the *Operational Overrides* are lo
 
 
