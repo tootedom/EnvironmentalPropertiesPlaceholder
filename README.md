@@ -1,8 +1,8 @@
 Environmental Properties Merger.
 ---------------------------------
 
+* auto-gen TOC:
 {:toc}
-
 ```
    Not Yet Available in Maven Repo
 ```
@@ -14,6 +14,8 @@ Environmental Properties Merger.
        <version>1.0.0-SNAPSHOT</version>
     </dependency>
 ```
+
+## Overview
 
 A simple library that allows for the sourcing of a standard java .properties file
 (http://docs.oracle.com/javase/6/docs/api/java/util/Properties.html) for use in application configuration.
