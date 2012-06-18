@@ -41,7 +41,7 @@ public class PrefixBasedResourceLoaderFactory implements ResourceLoaderFactory {
 
     enum Prefix {
         CLASSPATH("classpath:"),
-        FILESYSTEM("filesystem:");
+        FILESYSTEM("file:");
 
         private final String prefix;
         private final String prefixNoColon;

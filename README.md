@@ -69,7 +69,64 @@ The above can be achieved with the following:
 ***
 ## Changing the defaults
 
-By Default the
+By Default the library reads configuration from the classpath, looking for *config/default.properties* and then files that
+are override based on the value of the *${ENV}* variable from *config/environments/${ENV}.properties*.  This defaults are
+changable:
+
+### Changing the name of the default properties file
+
+The following will change the name of the default properties file that is sourced from *default.properties* to *global.properties*:
+
+      PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
+      .setNameOfDefaultPropertiesFile("global");
+      p = mergerBuilder.buildProperties();
+
+### Changing the extension of the properties file
+
+The following will change the extension of the properties file from *properties* to *props*:
+
+      PropertiesMergerBuilder mergerBuilder4 = new EnvironmentSpecificPropertiesMergerBuilder()
+      .setNameOfDefaultPropertiesFile("global")
+      .setExtensionForPropertiesFile("props");
+      p = mergerBuilder4.buildProperties();
+
+The separator character can be changed from "." to something else, i.e. "-" via the following:
+
+      .setExtensionSeparatorCharForPropertiesFile('-')
+
+### Changing the location that configuration is sourced
+
+By default the configuration files is sourced from the classpath location: *config/*.  This can be changed to either read
+from a different location on the classpath, or can be change to read from the file system:
+
+* Classpath
+
+Changes to source from */app/config/* on the classpath
+
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
+    .setLocationForLoadingConfigurationProperties("classpath:/app/config");
+    Properties p = mergerBuilder.buildProperties();
+
+* FileSystem
+
+Changes to source configuration from /data/opsoverrides/myapp/config
+
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
+    .setLocationForLoadingConfigurationProperties("file:/data/application/config");
+    Properties p = mergerBuilder.buildProperties();
+
+
+Changing to read from C:/data/opsoverrides/myapp/config on windows
+
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
+    .setLocationForLoadingConfigurationProperties("file:C:/data/opsoverrides/myapp/config");
+    Properties p = mergerBuilder.buildProperties();
+
+
+### Changing the location that environmental overrides are sourced
+
+By default the environmental overrides are sourced from the
+
 
 ***
 ## Multi Environmental Variable Configuration
@@ -86,6 +143,8 @@ order fashion such that it sources:
 
     resolverEnvAndOsBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
     resolverEnvAndOsBuilder.setVariablesUsedForSwitchingConfiguration(new String[] {"ENV","ENV,os.arch"});
+
+
     └── config
         ├── default.properties
         └── environments

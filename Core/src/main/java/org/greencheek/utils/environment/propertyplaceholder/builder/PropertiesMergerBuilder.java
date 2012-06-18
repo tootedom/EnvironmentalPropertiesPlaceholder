@@ -60,7 +60,7 @@ public interface PropertiesMergerBuilder {
     final static String DEFAULT_EXTENSION_FOR_PROPERTIES_FILE = "properties";
 
     final static String DEFAULT_DEFAULT_PROPERTIES_FILENAME = "default";
-    final static boolean DEFAULT_STRICT_MERGING_OF_PROPERTIES = true;
+    final static boolean DEFAULT_STRICT_MERGING_OF_PROPERTIES = false;
     final static String DEFAULT_RELATIVE_LOCATION_OF_FILES_OVERRIDE_DEFAULT = "environments/";
     final static String DEFAULT_OPERATIONAL_OVERRIDE_LOCATION = (System.getProperty("os.name")==null ||
                                                                  System.getProperty("os.name").toLowerCase().startsWith("win"))

@@ -210,7 +210,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
      * @return a Properties object, will always return a properties object.
      */
     private Properties load(Resource resource) {
-        if(resource == null) {
+        if(resource == null || !resource.isAvailable()) {
             return new Properties();
         }
 
@@ -303,9 +303,9 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
         Properties merged;
 
         ResourceLoader defaultAppPropertiesLoader = getResourceLoaderForLoadingConfigurationProperties();
-        Resource defaultProperties = defaultAppPropertiesLoader.getFile(getNameOfDefaultPropertiesFile());
+        log.debug("Attempting to source default properties file {} from location {}",getNameOfDefaultPropertiesFile(),defaultAppPropertiesLoader.getBaseLocation());
 
-        log.debug("Attempting to source default properties file {}",defaultProperties);
+        Resource defaultProperties = defaultAppPropertiesLoader.getFile(getNameOfDefaultPropertiesFile());
         if(!defaultProperties.isAvailable()) {// || !defaultProperties.canRead()) {
             String message = "Unable to source default properties file:" + getNameOfDefaultPropertiesFile();
             log.warn(message);
