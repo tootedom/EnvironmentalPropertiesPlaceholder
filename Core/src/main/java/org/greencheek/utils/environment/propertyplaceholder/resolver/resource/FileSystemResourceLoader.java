@@ -56,7 +56,7 @@ public class FileSystemResourceLoader implements ResourceLoader {
         if (resource == null || resource.trim().length() == 0) return null;
         if (resource.startsWith("/")) resource = resource.substring(1);
 
-        return new FileSystemResource(new File(baseLocation + resource).getAbsoluteFile());
+        return new FileSystemResource(new File(baseLocation,resource));
     }
 
     @Override

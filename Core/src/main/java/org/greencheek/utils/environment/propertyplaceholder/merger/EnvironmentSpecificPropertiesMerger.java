@@ -288,8 +288,8 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
         List<Resource> foundFiles = new ArrayList<Resource>(files.size());
 
         for(String location : files) {
+            log.debug("Checking for override file: {} in location {}",location,resourceLoader.getBaseLocation());
             Resource override = resourceLoader.getFile(location);
-            log.debug("Checking for override: {}",override);
             if(override.isAvailable()) {
                 log.debug("Override {} is available for sourcing",override);
                 foundFiles.add(override);

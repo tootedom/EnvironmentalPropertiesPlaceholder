@@ -1,8 +1,13 @@
 Environmental Properties Merger.
 ---------------------------------
 
-* auto-gen TOC:
-{:toc}
+**Table of Contents**
+
+- [Overview](#overview)
+- [Changing the defaults](#changing-the-defaults)
+- [Multi Environmental Variable Configuration](#multi-environmental-variable-configuration)
+- [Operational Overrides](#operational-overrides)
+- [Environmental Properties Merger.](#environmental-properties-merger)
 
 ```
    Not Yet Available in Maven Repo
@@ -56,6 +61,16 @@ a combination (merge) of:
 What this gives you is the ability to have different configuration deployed along with your application that has
 varying configuration based on environmental settings.
 
+The above can be achieved with the following:
+
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
+    p = mergerBuilder.buildProperties();
+
+***
+## Changing the defaults
+
+By Default the
+
 ***
 ## Multi Environmental Variable Configuration
 
@@ -87,8 +102,20 @@ database connection strings etc; that only the operations department might know 
 
 By default the library will look for these overrides within the directory (on the filesystem),
 in /data/opsoverrides/*<appname>*/config  (the value of *appname* you need to specify.  On a windows machine the default
-is c:\data\opsoverrides\*<appname>*\config).
+is c:\data\opsoverrides\*<appname>*\config).  For example the following will create a PropertiesMerger that reads
+operational overrides from the directory * /data/opsoverrides/demiservice/config* (on windows this will be C:)
 
-The location of where the *Operational Overrides* are lo
+    PropertiesMergerBuilder resolverEnvAndOsBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
+    .setVariablesUsedForSwitchingConfiguration(new String[] {"ENV","ENV,os.arch"})
+    .setApplicationName("demiservice")
+    Properties p = mergerBuilder.buildProperties();
+
+The location of where the *Operational Overrides* are loaded from can be changed, via setting a property on
+the MergerBuilder, abouts where the operational overrides are sourced.
+
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
+    .setVariablesUsedForSwitchingConfiguration(new String[] {"ENV","ENV,os.arch"})
+    .setLocationForLoadingOperationalOverrides("file:/data/ops/applicationX/config");
+    Properties p = mergerBuilder.buildProperties();
 
 
