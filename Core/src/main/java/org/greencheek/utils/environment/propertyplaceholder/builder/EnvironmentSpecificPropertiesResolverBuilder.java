@@ -67,4 +67,11 @@ public class EnvironmentSpecificPropertiesResolverBuilder implements PropertiesR
         return build(mergedPropertiesLoader).getProperties();
     }
 
+    @Override
+    public Properties buildProperties(PropertiesMergerBuilder builder) {
+        return build(builder.build()).getProperties();
+
+    }
+
+
 }

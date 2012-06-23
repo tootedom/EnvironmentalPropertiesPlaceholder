@@ -19,6 +19,19 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
+ * <p>
+ * Represents a class that is able to replace variables contained within
+ * the value of properties, for example replacing ${} placeholders within the
+ * values.  For example:
+ * <pre>
+ * database.server.cname=bernard-app.dbw.production
+ * database.url=jdbc:mysql://${database.server.cname}/admin
+ * </pre>
+ * </p>
+ * <p>
+ * Would result in the value for the property "database.url" having the value:
+ * "jdbc:mysql://bernard-app.dbw.production/admin"
+ * </p>
  * User: dominictootell
  * Date: 20/05/2012
  * Time: 13:43
@@ -38,12 +51,6 @@ public interface PropertiesResolver {
     String getProperty(String propertyName);
 
     /**
-     * Returns all the properties from the map, with all values resolved of any placeholders (variables i.e. ${xxx}).
-     * @return
-     */
-    public Properties getProperties();
-
-    /**
      * Returns a property from the map. If a property does not exist null will be returned.
      * The returned property value will <b>NOT</b> have had its value resolved of any placeholders
      * (variables i.e. ${xxx}).
@@ -52,6 +59,20 @@ public interface PropertiesResolver {
      * @return the property value, or null.
      */
     String getUnResolvedProperty(String propertyName);
+
+    /**
+     * Returns all the properties from the map, with all values resolved of any placeholders (variables i.e. ${xxx}).
+     * @return
+     */
+    public Properties getProperties();
+
+    /**
+     * Returns all of the properties, without the values having had their properties
+     * values parsed for placeholders.  The placeholders are kept intact.
+     */
+    public Properties getUnResolvedProperties();
+
+
 
 }
 

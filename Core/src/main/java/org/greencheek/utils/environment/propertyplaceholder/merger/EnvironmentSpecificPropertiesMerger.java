@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,10 +90,10 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
      * Holds the list of files that are to be looked for
      * in order in which they are merged (override) the defaults and the files before them.
      */
-    private final List<String> possibleOverrideFiles = new ArrayList<String>();
+    private final List<String> possibleOverrideFiles;
 
     public EnvironmentSpecificPropertiesMerger(PropertiesMergerBuilder builder) {
-
+        List<String> overrideFiles = new ArrayList<String>();
         this.applicationName = builder.getApplicationName();
 
         ResourceLoader opsOverride =   builder.getResourceLoaderForOperationalOverrides();
@@ -152,11 +153,12 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
 
             if(done) {
                 continuedFileName.append(extensionSeparatorCharForPropertiesFile).append(extensionForPropertiesFile);
-                possibleOverrideFiles.add(continuedFileName.toString());
+                overrideFiles.add(continuedFileName.toString());
             }
 
         }
 
+        possibleOverrideFiles = overrideFiles;
         mergedProperties = mergeProperties();
 
     }
@@ -374,7 +376,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
     @Override
     public Map<String, String> getMergedPropertiesAsMap() {
         Properties mergedProperties = _getMergedProperties();
-        return new HashMap(mergedProperties);
+        return new ConcurrentHashMap(mergedProperties);
     }
 
 

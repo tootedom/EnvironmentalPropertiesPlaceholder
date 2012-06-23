@@ -36,9 +36,28 @@ public interface PropertiesResolverBuilder {
     final static boolean DEFAULT_TRIMMING_PROPERTY_VALUES = true;
     final static ValueResolver DEFAULT_PROPERTY_VALUE_RESOLVER = new VariablePlaceholderValueResolver();
 
-
     public PropertiesResolver build(PropertiesMerger mergedPropertiesLoader);
+
+    /**
+     * Returns a set of properties that are retrieved from the given properties merger
+     * with the values resolved of any variables they contained (if they can be resolved)
+     *
+     * @param mergedPropertiesLoader The merger that is responsible for reading the properties from the file system
+     * @return the set of the properties, from the merger, with the values resolved of any variables (if possible)
+     */
     public Properties buildProperties(PropertiesMerger mergedPropertiesLoader);
+
+    /**
+     * Returns a set of properties that are retrieved from the given properties merger (the merger is created
+     * from the PropertiesMergerBuilder) with the values resolved of any variables they contained (if they can be resolved)
+     *
+     * @param builder The builder object that can be used to create a merger
+     *                that is responsible for reading the properties from the file system; from which the properties
+     *                are obtained, and the values resolved.
+     *
+     * @return the set of the properties, from the merger, with the values resolved of any variables (if possible)
+     */
+    public Properties buildProperties(PropertiesMergerBuilder builder);
 
     public PropertiesResolverBuilder setPropertyValueResolver(ValueResolver resolver);
     public ValueResolver getValueResolver();

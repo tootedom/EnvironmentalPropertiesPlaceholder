@@ -269,6 +269,13 @@ public class CompositeResolvedPropertiesBuilder
     }
 
     @Override
+    public Properties buildProperties(PropertiesMergerBuilder builder) {
+        return resolverBuilder.buildProperties(builder);
+
+    }
+
+
+    @Override
     public PropertiesResolverBuilder setPropertyValueResolver(ValueResolver resolver) {
         resolverBuilder.setPropertyValueResolver(resolver);
         return this;

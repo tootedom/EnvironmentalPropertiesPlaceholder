@@ -68,7 +68,21 @@ public class EnvironmentSpecificPropertiesResolver implements PropertiesResolver
 
     @Override
     public Properties getProperties() {
-        return propertyValueResolver.resolvedPropertyValues(properties);
+        return propertyValueResolver.resolvedPropertyValues(properties,isTrimmingPropertyValues());
     }
+
+    @Override
+    public Properties getUnResolvedProperties() {
+        boolean trim = isTrimmingPropertyValues();
+        Properties p = new Properties();
+        for(Map.Entry<Object,Object> e : this.properties.entrySet()) {
+            String key = (String)e.getKey();
+            String value = (String)e.getKey();
+            p.setProperty(key,trim ? value.trim() : value);
+        }
+
+        return p;
+    }
+
 
 }
