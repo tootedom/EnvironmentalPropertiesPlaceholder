@@ -12,15 +12,12 @@ Environmental Properties Merger.
 ***
 ## How to obtain the library
 
-```
-   Not Yet Available in Maven Repo
-```
 
 ```xml
     <dependency>
        <groupId>org.greencheek</groupId>
        <artifactId>environment-properties-merger-core</artifactId>
-       <version>1.0.0-SNAPSHOT</version>
+       <version>1.0.0</version>
     </dependency>
 ```
 
