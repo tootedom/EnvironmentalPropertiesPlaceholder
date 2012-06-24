@@ -646,6 +646,59 @@ yourself:
     </bean>
 ```
 
+You could also declare java based @Configuration, and create the **PropertySourcesPlaceholderConfigurer** as an @Bean.
+If the PropertySourcesPlaceholderConfigurer is only used for resolving properties for the Web Application Components,
+you could add @Configuration to the PropertiesMergerApplicationContextInitializer above, for example (a PropertySourcesPlaceholderConfigurer
+has to be registered in each separate context, i.e. the configurer isn't inherited by the WebApplicationContext from the root ApplicationContext
+like that of other beans, it only affects the context in which it is registered):
 
+```java
+    import java.util.Properties;
 
+    import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesMergerBuilder;
+    import org.greencheek.utils.environment.propertyplaceholder.builder.EnvironmentSpecificPropertiesResolverBuilder;
+    import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
+    import org.springframework.context.ApplicationContextInitializer;
+    import org.springframework.context.ConfigurableApplicationContext;
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+    import org.springframework.core.env.MutablePropertySources;
+    import org.springframework.core.env.PropertiesPropertySource;
+
+    @Configuration
+    public class AppConfig implements
+    		ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+    	private static final Properties environmentalProperties;
+    	static {
+    		PropertiesMerger merger = new EnvironmentSpecificPropertiesMergerBuilder().build();
+    		environmentalProperties = new EnvironmentSpecificPropertiesResolverBuilder().buildProperties(merger);
+    	}
+
+    	public void initialize(ConfigurableApplicationContext applicationContext) {
+    		initialise(applicationContext);
+    	}
+
+    	public static void initialise(ConfigurableApplicationContext applicationContext) {
+    		applicationContext
+    				.getEnvironment()
+    				.getPropertySources()
+    				.addFirst(new PropertiesPropertySource("p",environmentalProperties));
+    	}
+
+    	@Bean
+    	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+    		PropertySourcesPlaceholderConfigurer config = new PropertySourcesPlaceholderConfigurer();
+
+    		MutablePropertySources sources = new MutablePropertySources();
+    		sources.addFirst(new PropertiesPropertySource("p",environmentalProperties));
+
+    		config.setPropertySources(sources);
+
+    		return config;
+    	}
+
+    }
+```
 
