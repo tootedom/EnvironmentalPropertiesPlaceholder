@@ -307,6 +307,47 @@ Rather than a Properties object you can obtain a Map<String,String> of the prope
    Map<String,String> map = merger.getMergedPropertiesAsMap();
 ```
 
+## Property Merging Strictness
+
+It is when the PropertyMerger is constructed; that the properties files are read from the classpath and/or filesystem.
+During the resolution process (merging), the merger will compare the properties in the original Properties file (default.properties)
+and compare them against the properties in the overriding file.  If a property is defined in the overriding file; that
+did not exist in the default properties; a warning will be logged (Just letting you know that a new property exists; for
+which there is no default value).  For example, a spelling mistake exists in the *prod.properties*:
+
+**default.properties**
+   product-inventory.url=http://localhost:9090/api/list
+
+**prod.properties**
+   product-inevntory.url=http://products.live.xxx:9090/api/list
+
+For
+```java
+   PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
+   PropertiesMerger merger = mergerBuilder.build();
+```
+
+In testing you would see:
+
+   11:40:24.431 [main] WARN  o.g.u.e.p.m.EnvironmentSpecificPropertiesMerger - NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
+
+
+If you would rather have the PropertiesMerger b *strict* and throw and exception and fail to be contructed, you can
+set the merger to be strict:
+
+For
+```java
+   PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
+   .setStrictMergingOfProperties(true);
+   PropertiesMerger merger = mergerBuilder.build();
+```
+
+During the construction of the PropertiesMerger from the mergerBuilder's build() method, you would receive the runtime exception:
+org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException:
+
+   Exception in thread "main" org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException: NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
+
+
 ## Property values and Placeholder (${}) Replacement
 
 All of the above configuration/code examples will not replace any variables (placeholder) that are in
@@ -368,6 +409,13 @@ the **PropertiesResolverBuilder** via the *setPropertyValueResolver* method:
    p = resolverBuilder.buildProperties(mergerBuilder);
 ```
 
+
+## Thread Safety
+
+Like that of the PropertiesMergerBuilder, the **PropertiesResolverBuilder** is not thread safe, it is intended to by
+used by a single thread in order to construct a **PropertiesResolver**, which is then safe to use across multiple threads.
+This too goes for the **ValueResolver**, and it's configuration.  The **ValueResolver** (VariablePlaceholderValueResolver)
+ is thread safe after construction.
 
 
 
