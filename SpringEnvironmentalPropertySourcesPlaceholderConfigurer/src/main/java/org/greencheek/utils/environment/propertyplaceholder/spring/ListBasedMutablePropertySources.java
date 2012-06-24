@@ -20,6 +20,21 @@ import org.springframework.core.env.*;
 import java.util.List;
 
 /**
+ * Provides an easy way to create a Spring MutablePropertySources from
+ * a list of PropertySource objects.:
+ * <pre>
+ *     <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources">
+         <constructor-arg>
+           <list>
+             <ref bean="environmentalProperties"/>
+             <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources" factory-method="getSystemProperties"/>
+             <bean class="org.greencheek.utils.environment.propertyplaceholder.spring.ListBasedMutablePropertySources" factory-method="getSystemEnvironmentProperties"/>
+           </list>
+         </constructor-arg>
+       </bean>
+ * </pre>
+ * The list can then be provided to a org.springframework.context.support.PropertySourcesPlaceholderConfigurer
+ *
  * User: dominictootell
  * Date: 10/06/2012
  * Time: 17:07

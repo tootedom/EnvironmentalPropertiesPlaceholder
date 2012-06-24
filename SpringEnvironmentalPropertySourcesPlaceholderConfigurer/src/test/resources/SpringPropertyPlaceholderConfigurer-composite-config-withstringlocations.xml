@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties">
+            <bean factory-bean="propertiesResolver" factory-method="buildResolvedProperties"/>
+        </property>
+    </bean>
+
+    <bean id="propertiesResolver" class="org.greencheek.utils.environment.propertyplaceholder.resolver.builder.CompositeResolvedPropertiesBuilder">
+        <constructor-arg>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver">
+                <constructor-arg value="false"/> <!-- resolve env vars -->
+                <constructor-arg value="false"/> <!-- resolve system properties -->
+            </bean>
+        </constructor-arg>
+        <property name="locationForLoadingConfigurationProperties" value="classpath:/"/>
+        <property name="locationForLoadingOperationalOverrides" value="classpath:/opsoverrides"/>
+        <property name="relativeLocationOfFilesOverridingDefaultProperties" value="environments"/>
+    </bean>
+
+
+    <bean name="string" class="java.lang.String">
+        <constructor-arg value="${message}"/>
+    </bean>
+
+    <bean name="string-sys" class="java.lang.String">
+        <constructor-arg value="${sys}"/>
+    </bean>
+
+    <bean name="string-env" class="java.lang.String">
+        <constructor-arg value="${env}"/>
+    </bean>
+
+    <bean name="string-path" class="java.lang.String">
+        <constructor-arg value="${PATH}"/>
+    </bean>
+
+    <bean name="string-ops" class="java.lang.String">
+        <constructor-arg value="${tobeopsoverriddren}"/>
+    </bean>
+
+</beans>

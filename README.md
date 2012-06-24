@@ -349,6 +349,7 @@ org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchi
 > Exception in thread "main" org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException: NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
 >
 
+***
 ## Property values and Placeholder (${}) Replacement
 
 All of the above configuration/code examples will not replace any variables (placeholder) that are in
@@ -391,7 +392,7 @@ PropertiesMerger from which it obtains the merged properties:
     Properties p = resolverBuilder.buildProperties(mergerBuilder);
 ```
 
-## Obtaining Resolved and Unresolved properties one at a time
+### Obtaining Resolved and Unresolved properties one at a time
 
 Everytime you call *resolverBuilder.buildProperties(mergerBuilder);* to obtain a Properties object, a new PropertiesResolver
 and a Properties object will be created.  Therefore, you should really only create the Properties object once, and
@@ -427,7 +428,7 @@ This will query its internal Properties object it obtained from the merger:
 ```
 
 
-## Using the environment to resolve placeholders
+### Using the environment to resolve placeholders
 
 By default the Resolver will also resolve variables (placeholders), within the property values from both
 environment varibles available to the java process, and any java system properties (*-D*) that are set.  If you do not
@@ -446,7 +447,7 @@ the **PropertiesResolverBuilder** via the *setPropertyValueResolver* method:
    p = resolverBuilder.buildProperties(mergerBuilder);
 ```
 
-# Trimming Property Values of whitespace
+### Trimming Property Values of whitespace
 
 By default the property values returned from the *PropertiesResolver* are trimmed of whitespace; from the beginning
 and end of the property value (java.lang.String.trim()).  This can be turned off at the PropertiesResolverBuilder level:
@@ -459,7 +460,7 @@ and end of the property value (java.lang.String.trim()).  This can be turned off
 ```
 
 
-## Thread Safety
+### Thread Safety
 
 Like that of the PropertiesMergerBuilder, the **PropertiesResolverBuilder** is not thread safe, it is intended to by
 used by a single thread in order to construct a **PropertiesResolver**, which is then safe to use across multiple threads.
@@ -477,6 +478,173 @@ Like that of the PropertiesMergerBuilder, you obtain the PropertiesResolver from
 
 You can then use the constructed PropertiesResolver in multiple threads.  The Properties obtain returned via a
 **resolverBuilder.buildProperties(mergerBuilder);** is safe to use across multiple threads too.
+
+***
+## Composite Builder
+
+A Composite Builder is avialable that is a combination of the PropertiesMergerBuilder and the PropertiesResolverBuilder
+that adds the method **Properties buildResolvedProperties();**, that returns the set of properties, with all
+embedded property values resolved.  The properties themselves come from a set of combined property files that are
+source dependent on system or environment properties defined by the merger. Any property value that contain variables
+(placeholders i.e. ${..})  are resolved.    The composite builder was created as a means to reduce the number of lines
+of xml/code when generating a *Properties* object to use as a Spring 3.1 [PropertySources](http://static.springsource.org/spring/docs/3.1.x/javadoc-api/org/springframework/core/env/PropertySource.html)
+object.
+
+```xml
+    <bean id="environmentalProperties" class="org.springframework.core.env.PropertiesPropertySource">
+        <constructor-arg value="myEnvironmentProperties"/>
+        <constructor-arg>
+            <bean factory-bean="propertiesResolver" factory-method="buildResolvedProperties"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="propertiesResolver" class="org.greencheek.utils.environment.propertyplaceholder.resolver.builder.CompositeResolvedPropertiesBuilder">
+        <constructor-arg>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver">
+                <constructor-arg value="false"/> <!-- do not resolve env vars -->
+                <constructor-arg value="false"/> <!-- do not resolve system properties -->
+            </bean>
+        </constructor-arg>
+        <property name="locationForLoadingConfigurationProperties" value="classpath:/"/>
+        <property name="locationForLoadingOperationalOverrides" value="classpath:/opsoverrides"/>
+        <property name="relativeLocationOfFilesOverridingDefaultProperties" value="environments"/>
+    </bean>
+```
+
+***
+## Using in Spring
+
+Prior to PropertySource introduction in Spring 3 and the associate @Profile(value="DEV"), and autowired
+org.springframework.core.env.Environment.  The way to define a PropertyPlaceholderConfigurer was as follows:
+
+
+```xml
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties">
+            <bean factory-bean="propertiesResolver" factory-method="buildResolvedProperties"/>
+        </property>
+    </bean>
+
+    <bean id="propertiesResolver" class="org.greencheek.utils.environment.propertyplaceholder.resolver.builder.CompositeResolvedPropertiesBuilder">
+        <constructor-arg>
+            <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver">
+                <constructor-arg value="false"/> <!-- resolve env vars -->
+                <constructor-arg value="false"/> <!-- resolve system properties -->
+            </bean>
+        </constructor-arg>
+        <property name="locationForLoadingConfigurationProperties" value="classpath:/"/>
+        <property name="locationForLoadingOperationalOverrides" value="classpath:/opsoverrides"/>
+        <property name="relativeLocationOfFilesOverridingDefaultProperties" value="environments"/>
+    </bean>
+```
+
+This allowed you to register a Property Placeholder that you resolve ${} properties within the application contexts,
+and @Value annotations:
+
+```java
+    @Value("${message}")
+	private String message;
+```
+
+With the introduction of Spring 3.1.1, there has been a move to the use of PropertySource implementations and the
+use of the autowired Environment in order to obtain properties:
+
+```java
+    @Autowired
+	private Environment env;
+
+    @RequestMapping(value="/headers/{noofheaders}",method=RequestMethod.GET)
+    public String returnHeaders(final @PathVariable("noofheaders") int noheaders,
+    						    Model model,HttpServletRequest request)
+    {
+        String s = env.getProperty("message");
+    }
+```
+
+The PropertiesMerger works within this environment, and properties can be made available through the Environment
+object via the use of a custom [ApplicationContextInitializer](http://static.springsource.org/spring/docs/3.1.x/javadoc-api/org/springframework/context/ApplicationContextInitializer.html)
+that is then set on either the DispatcherServlet or the ContextLoaderListener
+
+* DispatcherServlet:
+
+```xml
+    <servlet>
+		<servlet-name>servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>contextInitializerClasses</param-name>
+        	<param-value>org.greencheek.playground.web.spring.PropertiesMergerApplicationContextInitializer</param-value>
+        </init-param>
+	</servlet>
+```
+
+* ContextLoaderListener:
+
+```xml
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>org.greencheek.playground.web.spring.PropertiesMergerApplicationContextInitializer</param-value>
+    </context-param>
+
+    <listener>
+    	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+```
+
+You would then make a PropertySource that is instance (PropertiesPropertySource)[http://static.springsource.org/spring/docs/3.1.x/javadoc-api/org/springframework/core/env/PropertiesPropertySource.html]
+populated from the properties obtain from either the merger or the resolver:
+
+```java
+  public class PropertiesMergerApplicationContextInitializer
+         implements ApplicationContextInitializer<ConfigurableApplicationContext>  {
+
+	 private static final Properties environmentalProperties;
+	 static {
+        PropertiesMerger merger = new EnvironmentSpecificPropertiesMergerBuilder().build();
+        environmentalProperties = merger.getMergedProperties();
+        // Or have the following for the resolved ${} properties:
+        // environmentalProperties = new EnvironmentSpecificPropertiesResolverBuilder().buildProperties(merger);
+
+	 }
+
+	 public void initialize(ConfigurableApplicationContext applicationContext) {
+		 initialise(applicationContext);
+	 }
+
+	 public static void initialise(ConfigurableApplicationContext applicationContext) {
+	     // Add the merged properties to the applicationContext environment
+	     // So that the properties are available in the @Autowired Environment object
+		 applicationContext.getEnvironment()
+		 .getPropertySources()
+		 .addFirst(new PropertiesPropertySource("p",environmentalProperties));
+	 }
+  }
+```
+
+Please be aware the above **DOES NOT** register a PropertySourcesPlaceholderConfigurer as a BeanFactory Post Processor
+so the properties will not be made available to @Value annotations, unless you register a PropertySourcesPlaceholderConfigurer
+yourself:
+
+```xml
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+           <property name="properties">
+           		<bean factory-bean="propertiesResolver" factory-method="buildResolvedProperties"/>
+           </property>
+    </bean>
+
+    <bean id="propertiesResolver" class="org.greencheek.utils.environment.propertyplaceholder.resolver.builder.CompositeResolvedPropertiesBuilder">
+            <constructor-arg>
+                <bean class="org.greencheek.utils.environment.propertyplaceholder.resolver.value.VariablePlaceholderValueResolver">
+                    <constructor-arg value="false"/> <!-- resolve env vars -->
+                    <constructor-arg value="false"/> <!-- resolve system properties -->
+                </bean>
+            </constructor-arg>
+            <property name="locationForLoadingConfigurationProperties" value="classpath:/"/>
+            <property name="locationForLoadingOperationalOverrides" value="classpath:/opsoverrides"/>
+            <property name="relativeLocationOfFilesOverridingDefaultProperties" value="environments"/>
+    </bean>
+```
 
 
 
