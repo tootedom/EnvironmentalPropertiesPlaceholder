@@ -15,7 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver;
 
-import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesMergerBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.builder.PropertiesResolverBuilder;
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;

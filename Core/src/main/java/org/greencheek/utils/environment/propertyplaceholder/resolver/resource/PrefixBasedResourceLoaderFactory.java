@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PrefixBasedResourceLoaderFactory implements ResourceLoaderFactory {
 
-    public static Logger log = LoggerFactory.getLogger(PrefixBasedResourceLoaderFactory.class);
+    private final Logger log = LoggerFactory.getLogger(PrefixBasedResourceLoaderFactory.class);
 
     enum Prefix {
         CLASSPATH("classpath:"),

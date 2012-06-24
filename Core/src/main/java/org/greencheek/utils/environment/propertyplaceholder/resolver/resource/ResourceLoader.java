@@ -15,7 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.resource;
 
-import java.io.File;
 
 /**
  * User: dominictootell

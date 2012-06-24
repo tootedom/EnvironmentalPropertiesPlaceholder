@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 public class CompositeResolvedPropertiesBuilder
         implements ResolvedPropertiesBuilder, PropertiesMergerBuilder,PropertiesResolverBuilder
 {
-    private final ValueResolver valueResolver;
     private final PropertiesMergerBuilder mergerBuilder;
     private final PropertiesResolverBuilder resolverBuilder;
 
@@ -83,7 +82,6 @@ public class CompositeResolvedPropertiesBuilder
     public CompositeResolvedPropertiesBuilder(ValueResolver valueResolver,
                                               PropertiesMergerBuilder mergerBuilder,
                                               PropertiesResolverBuilder resolverBuilder) {
-        this.valueResolver = valueResolver;
         this.mergerBuilder = mergerBuilder;
         this.resolverBuilder = resolverBuilder;
         resolverBuilder.setPropertyValueResolver(valueResolver);

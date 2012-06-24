@@ -25,8 +25,6 @@ import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.Re
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -229,7 +227,7 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
                 try {
                     is.close();
                 } catch (Exception e) {
-
+                    log.warn("Unable to close file:{}",resource,e);
                 }
             }
         }
@@ -262,15 +260,16 @@ public class EnvironmentSpecificPropertiesMerger implements PropertiesMerger {
             }
         }
 
-
-        for (Object key : second.keySet()) {
-            if (first.get(key)==null) {
-                String msg = "NoMatchingPropertyWarning: Property \"" + key + "\" from overriding properties does not exist in original properties";
-                if (strict) {
-                    log.warn(msg);
-                    throw new NoMatchingPropertyException(msg);
-                } else {
-                    log.warn(msg);
+        if(second!=null) {
+            for (Object key : second.keySet()) {
+                if (merged.get(key)==null) {
+                    String msg = "NoMatchingPropertyWarning: Property \"" + key + "\" from overriding properties does not exist in original properties";
+                    if (strict) {
+                        log.warn(msg);
+                        throw new NoMatchingPropertyException(msg);
+                    } else {
+                        log.warn(msg);
+                    }
                 }
             }
         }

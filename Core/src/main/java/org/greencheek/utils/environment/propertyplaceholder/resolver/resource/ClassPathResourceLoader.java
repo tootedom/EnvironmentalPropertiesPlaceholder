@@ -15,9 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.resource;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -41,7 +38,7 @@ public class ClassPathResourceLoader implements ResourceLoader {
             configurationResourceLocation = configurationResourceLocation + "/";
         }
 
-        if (configurationResourceLocation.length() == 1 && configurationResourceLocation.equals("/")) {
+        if ((configurationResourceLocation==null) || (configurationResourceLocation.length() == 1 && configurationResourceLocation.equals("/"))) {
             this.baseLocation = "";
         }
         else {
@@ -63,14 +60,14 @@ public class ClassPathResourceLoader implements ResourceLoader {
      * @return The File object that represents the resource from the classpath
      */
     public Resource getFile(String resource) {
-        URL base = null;
+        URL base;
 
         // strip out the starting '/'
         if (resource.startsWith("/")) resource = resource.substring(1);
 
         resource = baseLocation + resource;
 
-        if (base == null) base = Thread.currentThread().getContextClassLoader().getResource(resource);
+        base = Thread.currentThread().getContextClassLoader().getResource(resource);
         if (base == null) base = ClassPathResourceLoader.class.getClassLoader().getResource(resource);
 
         //if (base == null) return null;
@@ -82,35 +79,6 @@ public class ClassPathResourceLoader implements ResourceLoader {
     @Override
     public String getBaseLocation() {
         return baseLocation;
-    }
-
-    /**
-     * Takes the URL object that represents a file object, and returns a File
-     * representation
-     *
-     * @param fileurl the url representing the file
-     * @return The File object representation from a URL
-     */
-
-    private static File getFile(URL fileurl) {
-        try {
-            return new File(toURI(fileurl.toString()).getSchemeSpecificPart());
-        } catch (URISyntaxException ex) {
-            // Fallback for URLs that are not valid URIs (should hardly ever happen).
-            return new File(fileurl.getFile());
-        }
-    }
-
-    /**
-     * Changes spaces into %20.
-     *
-     * @param location The location of the file on the file system.  If it includes spaces they
-     *                 are converted to %20
-     * @return The location as a URI
-     * @throws URISyntaxException
-     */
-    private static URI toURI(String location) throws URISyntaxException {
-        return new URI(location.replaceAll(" ", "%20"));
     }
 
 

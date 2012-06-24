@@ -16,9 +16,7 @@
 package org.greencheek.utils.environment.propertyplaceholder.builder;
 
 import org.greencheek.utils.environment.propertyplaceholder.merger.PropertiesMerger;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.PropertiesResolver;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.JavaPlatformOperatingEnvironmentVariableReader;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentVariableReader;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.resource.*;
 import org.greencheek.utils.environment.propertyplaceholder.resolver.value.ValueResolver;

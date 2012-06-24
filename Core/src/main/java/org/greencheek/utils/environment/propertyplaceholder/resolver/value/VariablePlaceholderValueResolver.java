@@ -15,11 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.value;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
-//import org.springframework.util.Assert;
-//import org.springframework.util.StringUtils;
-
 import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

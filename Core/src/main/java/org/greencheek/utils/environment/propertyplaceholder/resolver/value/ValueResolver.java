@@ -15,8 +15,6 @@
  */
 package org.greencheek.utils.environment.propertyplaceholder.resolver.value;
 
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.JavaPlatformOperatingEnvironmentProperties;
-import org.greencheek.utils.environment.propertyplaceholder.resolver.environment.OperatingEnvironmentProperties;
 
 import java.util.Map;
 import java.util.Properties;

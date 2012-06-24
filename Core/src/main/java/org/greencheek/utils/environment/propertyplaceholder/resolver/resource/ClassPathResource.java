@@ -30,7 +30,7 @@ import java.net.URL;
 public class ClassPathResource implements Resource {
 
     private final URL resource;
-    Logger log = LoggerFactory.getLogger(ClassPathResource.class);
+    private final Logger log = LoggerFactory.getLogger(ClassPathResource.class);
 
     public ClassPathResource(URL resource) {
         this.resource = resource;

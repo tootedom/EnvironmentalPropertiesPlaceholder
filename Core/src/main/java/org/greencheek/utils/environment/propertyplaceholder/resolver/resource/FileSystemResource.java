@@ -30,7 +30,7 @@ import java.io.InputStream;
  */
 public class FileSystemResource implements Resource{
 
-    private Logger log = LoggerFactory.getLogger(FileSystemResource.class);
+    private final Logger log = LoggerFactory.getLogger(FileSystemResource.class);
     private final File file;
 
     public FileSystemResource(File f) {
