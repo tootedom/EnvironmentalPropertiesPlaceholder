@@ -400,20 +400,25 @@ resolved variable and with unresolved variables; you can create a PropertiesReso
 This will query its internal Properties object it obtained from the merger:
 
 * Create the PropertiesResolver
+
 ```java
     PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
     PropertiesResolverBuilder resolverBuilder = new EnvironmentSpecificPropertiesResolverBuilder();
     PropertiesMerger merger = mergerBuilder.build();
     PropertiesResolver resolver = resolverBuilder.build(merger);
 ```
+
 * Query for Resolved Property
+
 ```java
    resolver.getProperty("database.url")
    //
    // Returns: jdbc:mysql://bernard-app.dbw.production/admin
    //
 ```
+
 * Query for UnResolved Property
+
 ```java
    resolver.getUnResolvedProperty("database.url")
    //
