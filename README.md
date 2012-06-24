@@ -19,7 +19,6 @@
 	- [Thread Safety](#thread-safety)
 - [Composite Builder](#composite-builder)
 - [Using in Spring](#using-in-spring)
-- [Environmental Properties Merger.](#environmental-properties-merger)
 
 ## How to obtain the library
 
