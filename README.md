@@ -315,10 +315,10 @@ and compare them against the properties in the overriding file.  If a property i
 did not exist in the default properties; a warning will be logged (Just letting you know that a new property exists; for
 which there is no default value).  For example, a spelling mistake exists in the *prod.properties*:
 
-**default.properties**
+   **default.properties**
    product-inventory.url=http://localhost:9090/api/list
 
-**prod.properties**
+   **prod.properties**
    product-inevntory.url=http://products.live.xxx:9090/api/list
 
 For
@@ -329,24 +329,25 @@ For
 
 In testing you would see:
 
-   11:40:24.431 [main] WARN  o.g.u.e.p.m.EnvironmentSpecificPropertiesMerger - NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
-
+>
+>  11:40:24.431 [main] WARN  o.g.u.e.p.m.EnvironmentSpecificPropertiesMerger - NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
+>
 
 If you would rather have the PropertiesMerger b *strict* and throw and exception and fail to be contructed, you can
-set the merger to be strict:
+set the merger to be strict, as follows:
 
-For
 ```java
    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder()
    .setStrictMergingOfProperties(true);
    PropertiesMerger merger = mergerBuilder.build();
 ```
 
-During the construction of the PropertiesMerger from the mergerBuilder's build() method, you would receive the runtime exception:
+Then, during the construction of the PropertiesMerger from the mergerBuilder's build() method, you would receive the runtime exception:
 org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException:
 
-   Exception in thread "main" org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException: NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
-
+>
+> Exception in thread "main" org.greencheek.utils.environment.propertyplaceholder.resolver.exception.NoMatchingPropertyException: NoMatchingPropertyWarning: Property "product-inevntory.url" from overriding properties does not exist in original properties
+>
 
 ## Property values and Placeholder (${}) Replacement
 
@@ -390,7 +391,38 @@ PropertiesMerger from which it obtains the merged properties:
     Properties p = resolverBuilder.buildProperties(mergerBuilder);
 ```
 
-# Using the environment to resolve placeholders
+## Obtaining Resolved and Unresolved properties one at a time
+
+Everytime you call *resolverBuilder.buildProperties(mergerBuilder);* to obtain a Properties object, a new PropertiesResolver
+and a Properties object will be created.  Therefore, you should really only create the Properties object once, and
+use it in multiple place.  However, if you have a central place (object) to query that will return both a property with
+resolved variable and with unresolved variables; you can create a PropertiesResolver object, and query it for properties.
+This will query its internal Properties object it obtained from the merger:
+
+* Create the PropertiesResolver
+```java
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
+    PropertiesResolverBuilder resolverBuilder = new EnvironmentSpecificPropertiesResolverBuilder();
+    PropertiesMerger merger = mergerBuilder.build();
+    PropertiesResolver resolver = resolverBuilder.build(merger);
+```
+* Query for Resolved Property
+```java
+   resolver.getProperty("database.url")
+   //
+   // Returns: jdbc:mysql://bernard-app.dbw.production/admin
+   //
+```
+* Query for UnResolved Property
+```java
+   resolver.getUnResolvedProperty("database.url")
+   //
+   // Returns: jdbc:mysql://${database.server.cname}/admin
+   //
+```
+
+
+## Using the environment to resolve placeholders
 
 By default the Resolver will also resolve variables (placeholders), within the property values from both
 environment varibles available to the java process, and any java system properties (*-D*) that are set.  If you do not
@@ -409,6 +441,18 @@ the **PropertiesResolverBuilder** via the *setPropertyValueResolver* method:
    p = resolverBuilder.buildProperties(mergerBuilder);
 ```
 
+# Trimming Property Values of whitespace
+
+By default the property values returned from the *PropertiesResolver* are trimmed of whitespace; from the beginning
+and end of the property value (java.lang.String.trim()).  This can be turned off at the PropertiesResolverBuilder level:
+
+```java
+   PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
+   PropertiesResolverBuilder resolverBuilder = new EnvironmentSpecificPropertiesResolverBuilder()
+   .setTrimmingPropertyValues(false);
+   PropertiesResolver resolver = resolverBuilder.build(mergerBuilder.build());
+```
+
 
 ## Thread Safety
 
@@ -417,6 +461,17 @@ used by a single thread in order to construct a **PropertiesResolver**, which is
 This too goes for the **ValueResolver**, and it's configuration.  The **ValueResolver** (VariablePlaceholderValueResolver)
  is thread safe after construction.
 
+Like that of the PropertiesMergerBuilder, you obtain the PropertiesResolver from the builder:
+
+```java
+    PropertiesMergerBuilder mergerBuilder = new EnvironmentSpecificPropertiesMergerBuilder();
+    PropertiesResolverBuilder resolverBuilder = new EnvironmentSpecificPropertiesResolverBuilder();
+    PropertiesMerger merger = mergerBuilder.build();
+    PropertiesResolver resolver = resolverBuilder.build(merger);
+```
+
+You can then use the constructed PropertiesResolver in multiple threads.  The Properties obtain returned via a
+**resolverBuilder.buildProperties(mergerBuilder);** is safe to use across multiple threads too.
 
 
 
