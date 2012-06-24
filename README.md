@@ -311,7 +311,7 @@ The above is equivalent to:
    Properties p = merger.getMergedProperties();
 ```
 
-## Map<String,String>
+## Obtaining a Map instead of a Properties Object
 
 Rather than a Properties object you can obtain a Map<String,String> of the properties:
 
