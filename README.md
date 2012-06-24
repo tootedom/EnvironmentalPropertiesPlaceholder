@@ -24,6 +24,13 @@ Environmental Properties Merger.
     </dependency>
 ```
 
+The maven repositories are located at:
+
+```
+   https://raw.github.com/tootedom/tootedom-mvn-repo/master/releases/
+   https://raw.github.com/tootedom/tootedom-mvn-repo/master/snapshots/
+```
+
 ## Overview
 
 A simple library that allows for the sourcing of a standard java .properties file
