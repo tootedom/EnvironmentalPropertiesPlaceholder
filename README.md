@@ -1,15 +1,26 @@
-Environmental Properties Merger.
----------------------------------
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-**Table of Contents**
-
+- [How to obtain the library](#how-to-obtain-the-library)
 - [Overview](#overview)
 - [Changing the defaults](#changing-the-defaults)
+	- [Changing the name of the default properties file](#changing-the-name-of-the-default-properties-file)
+	- [Changing the extension of the properties file](#changing-the-extension-of-the-properties-file)
+	- [Changing the location that configuration is sourced](#changing-the-location-that-configuration-is-sourced)
+	- [Changing the location that environmental overrides are sourced](#changing-the-location-that-environmental-overrides-are-sourced)
 - [Multi Environmental Variable Configuration](#multi-environmental-variable-configuration)
 - [Operational Overrides](#operational-overrides)
+- [Thread Safety](#thread-safety)
+- [Map<String,String>](#map<stringstring>)
+- [Property Merging Strictness](#property-merging-strictness)
+- [Property values and Placeholder (${}) Replacement](#property-values-and-placeholder-${}-replacement)
+	- [Obtaining Resolved and Unresolved properties one at a time](#obtaining-resolved-and-unresolved-properties-one-at-a-time)
+	- [Using the environment to resolve placeholders](#using-the-environment-to-resolve-placeholders)
+	- [Trimming Property Values of whitespace](#trimming-property-values-of-whitespace)
+	- [Thread Safety](#thread-safety)
+- [Composite Builder](#composite-builder)
+- [Using in Spring](#using-in-spring)
 - [Environmental Properties Merger.](#environmental-properties-merger)
 
-***
 ## How to obtain the library
 
 
